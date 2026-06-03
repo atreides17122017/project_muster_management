@@ -1,0 +1,33 @@
+<div class="layout">
+
+  <!-- HEADER -->
+  <header class="header">
+    <div class="left-section">
+      <button class="menu-btn" (click)="toggleSidebar()">☰</button>
+
+      <!-- Railway Logo -->
+      <img src="assets/railway-logo.jpg" class="logo" alt="Railway Logo">
+      
+      <h2>Railway Admin</h2>
+    </div>
+
+    <div class="right-section">
+      <span>Admin</span>
+    </div>
+  </header>
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar" [class.closed]="!isSidebarOpen">
+    <nav>
+      <a routerLink="dashboard" routerLinkActive="active">Dashboard</a>
+      <a routerLink="users" routerLinkActive="active">Users</a>
+      <a routerLink="settings" routerLinkActive="active">Settings</a>
+    </nav>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <main class="content" [class.expanded]="!isSidebarOpen">
+    <router-outlet></router-outlet>
+  </main>
+
+</div>

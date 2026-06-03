@@ -1,16 +1,5 @@
-# PHP runtime
-php_85/
-
-# Angular
-**/node_modules/
-**/.angular/
-
-# Laravel
-**/vendor/
-**/.env
-
-# Logs
-*.log
-
-# VS Code
+node_modules/
+dist/
+.angular/
 .vscode/
+*.log
