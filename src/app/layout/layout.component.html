@@ -1,0 +1,43 @@
+<!-- HEADER -->
+<header class="header">
+  <button (click)="toggleSidebar()">☰</button>
+  <h2>Admin Dashboard</h2>
+</header>
+
+<!-- 🔥 SINGLE CLEAN TICKER (ONLY ONE) -->
+<div class="ticker-container">
+  <div class="ticker-track">
+    Important dates:
+    (1) NDA submission is due from the 1st to the 5th of every month
+    (2) Muster submission is due from the 11th to the 12th of every month
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    Important dates:
+    (1) NDA submission is due from the 1st to the 5th of every month
+    (2) Muster submission is due from the 11th to the 12th of every month
+  </div>
+</div>
+
+<!-- MAIN LAYOUT -->
+<div class="container" [class.collapsed]="isCollapsed">
+
+  <aside>
+    <div class="menu" *ngFor="let menu of menus">
+      <div class="menu-title" (click)="menu.open = !menu.open">
+        <span>{{ menu.title }}</span>
+        <span class="arrow" [class.open]="menu.open">▼</span>
+      </div>
+
+      <div class="submenu" *ngIf="menu.open">
+        <div *ngFor="let item of menu.items"
+             (click)="navigate(item)">
+          {{item.name}}
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <main>
+    <router-outlet></router-outlet>
+  </main>
+
+</div>
