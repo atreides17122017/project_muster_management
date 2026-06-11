@@ -57,3 +57,57 @@
   </div>
 
 </div>
+
+<!--ADD MODAL-->
+<div *ngIf="showAddModal" class="modal-backdrop">
+  <div class="modal-box">
+    <h2>Add {{ title }}</h2>
+
+    <div *ngFor="let col of columns">
+      <label *ngIf="col.key !== 'id'">{{ col.label }}</label>
+
+      <input
+        *ngIf="col.key !== 'id'"
+        [(ngModel)]="newItem[col.key]"
+      />
+    </div>
+
+    <div class="modal-actions">
+      <button (click)="saveNewItem()">Save</button>
+      <button (click)="closeModal()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!--EDIT MODAL-->
+<div *ngIf="showEditModal" class="modal-backdrop">
+  <div class="modal-box">
+    <h2>Edit {{ title }}</h2>
+
+    <div *ngFor="let col of columns">
+      <label *ngIf="col.key !== 'id'">{{ col.label }}</label>
+
+      <input
+        *ngIf="col.key !== 'id'"
+        [(ngModel)]="selectedItem[col.key]"
+      />
+    </div>
+
+    <div class="modal-actions">
+      <button (click)="updateItem()">Update</button>
+      <button (click)="closeModal()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!--DELETE MODAL-->
+<div *ngIf="showDeleteModal" class="modal-backdrop">
+  <div class="modal-box">
+    <h3>Are you sure you want to delete?</h3>
+
+    <div class="modal-actions">
+      <button (click)="confirmDelete()">Yes</button>
+      <button (click)="closeModal()">No</button>
+    </div>
+  </div>
+</div>
