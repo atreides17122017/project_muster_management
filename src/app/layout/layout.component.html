@@ -4,13 +4,9 @@
   <h2>Admin Dashboard</h2>
 </header>
 
-<!-- 🔥 SINGLE CLEAN TICKER (ONLY ONE) -->
+<!-- TICKER -->
 <div class="ticker-container">
   <div class="ticker-track">
-    Important dates:
-    (1) NDA submission is due from the 1st to the 5th of every month
-    (2) Muster submission is due from the 11th to the 12th of every month
-    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
     Important dates:
     (1) NDA submission is due from the 1st to the 5th of every month
     (2) Muster submission is due from the 11th to the 12th of every month
@@ -22,17 +18,40 @@
 
   <aside>
     <div class="menu" *ngFor="let menu of menus">
-      <div class="menu-title" (click)="menu.open = !menu.open">
-        <span>{{ menu.title }}</span>
-        <span class="arrow" [class.open]="menu.open">▼</span>
+
+      <!-- ✅ SINGLE MENU (Supervisor) -->
+      <div *ngIf="!menu.items || menu.items.length === 0"
+           class="menu-title single"
+           (click)="navigate(menu)">
+
+        {{ menu.title }}
       </div>
 
-      <div class="submenu" *ngIf="menu.open">
-        <div *ngFor="let item of menu.items"
-             (click)="navigate(item)">
-          {{item.name}}
+      <!-- ✅ DROPDOWN MENU (Master Data only) -->
+      <div *ngIf="menu.items && menu.items.length">
+
+        <div class="menu-title" (click)="toggleMenu(menu)">
+          <span>{{ menu.title }}</span>
+
+          <!-- Arrow ONLY for dropdown -->
+          <span class="arrow" [class.open]="menu.open">▼</span>
         </div>
+
+        <!-- SUBMENU -->
+        <div class="submenu" *ngIf="menu.open">
+
+          <div *ngFor="let item of menu.items"
+               class="submenu-item"
+               (click)="navigate(item, $event)">
+
+            {{ item.name }}
+
+          </div>
+
+        </div>
+
       </div>
+
     </div>
   </aside>
 
@@ -41,4 +60,3 @@
   </main>
 
 </div>
-

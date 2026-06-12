@@ -1,6 +1,5 @@
 <!-- DASHBOARD -->
 <div *ngIf="isDashboard" class="dashboard">
-
   <h1 class="main-title">Muster Management System</h1>
 
   <div class="cards">
@@ -10,26 +9,17 @@
     <div class="card">Departments</div>
     <div class="card">Input Options</div>
   </div>
-
 </div>
 
 <!-- TABLE PAGE -->
 <div *ngIf="!isDashboard" class="page">
-
   <div class="page-header">
     <h2>{{ title }}</h2>
-
-    <button class="add-btn" (click)="addItem()">
-      + Add
-    </button>
+    <button class="add-btn" (click)="addItem()">+ Add</button>
   </div>
 
   <div class="search-bar">
-    <input
-      type="text"
-      placeholder="Search..."
-      [(ngModel)]="searchText"
-    />
+    <input type="text" placeholder="Search..." [(ngModel)]="searchText" />
   </div>
 
   <div class="table-container">
@@ -55,10 +45,9 @@
       </tbody>
     </table>
   </div>
-
 </div>
 
-<!--ADD MODAL-->
+<!-- ================= ADD MODAL ================= -->
 <div *ngIf="showAddModal" class="modal-backdrop">
   <div class="modal-box">
     <h2>Add {{ title }}</h2>
@@ -66,8 +55,34 @@
     <div *ngFor="let col of columns">
       <label *ngIf="col.key !== 'id'">{{ col.label }}</label>
 
+      <!-- DROPDOWN -->
+      <select
+        *ngIf="col.type === 'dropdown'"
+        [(ngModel)]="newItem[col.key]"
+      >
+        <option value="">Select</option>
+        <option *ngFor="let opt of col.options" [value]="opt">
+          {{ opt }}
+        </option>
+      </select>
+
+      <!-- PASSWORD -->
       <input
-        *ngIf="col.key !== 'id'"
+        *ngIf="col.type === 'password'"
+        type="password"
+        [(ngModel)]="newItem[col.key]"
+      />
+
+      <!-- USERNAME VALIDATION -->
+      <input
+        *ngIf="col.key === 'username'"
+        [(ngModel)]="newItem[col.key]"
+        (input)="newItem[col.key] = newItem[col.key].replace(/[.&]/g, '')"
+      />
+
+      <!-- NORMAL INPUT -->
+      <input
+        *ngIf="!col.type && col.key !== 'username'"
         [(ngModel)]="newItem[col.key]"
       />
     </div>
@@ -79,7 +94,7 @@
   </div>
 </div>
 
-<!--EDIT MODAL-->
+<!-- ================= EDIT MODAL ================= -->
 <div *ngIf="showEditModal" class="modal-backdrop">
   <div class="modal-box">
     <h2>Edit {{ title }}</h2>
@@ -87,8 +102,34 @@
     <div *ngFor="let col of columns">
       <label *ngIf="col.key !== 'id'">{{ col.label }}</label>
 
+      <!-- DROPDOWN -->
+      <select
+        *ngIf="col.type === 'dropdown'"
+        [(ngModel)]="selectedItem[col.key]"
+      >
+        <option value="">Select</option>
+        <option *ngFor="let opt of col.options" [value]="opt">
+          {{ opt }}
+        </option>
+      </select>
+
+      <!-- PASSWORD -->
       <input
-        *ngIf="col.key !== 'id'"
+        *ngIf="col.type === 'password'"
+        type="password"
+        [(ngModel)]="selectedItem[col.key]"
+      />
+
+      <!-- USERNAME VALIDATION -->
+      <input
+        *ngIf="col.key === 'username'"
+        [(ngModel)]="selectedItem[col.key]"
+        (input)="selectedItem[col.key] = selectedItem[col.key].replace(/[.&]/g, '')"
+      />
+
+      <!-- NORMAL INPUT -->
+      <input
+        *ngIf="!col.type && col.key !== 'username'"
         [(ngModel)]="selectedItem[col.key]"
       />
     </div>
@@ -100,7 +141,7 @@
   </div>
 </div>
 
-<!--DELETE MODAL-->
+<!-- ================= DELETE MODAL ================= -->
 <div *ngIf="showDeleteModal" class="modal-backdrop">
   <div class="modal-box">
     <h3>Are you sure you want to delete?</h3>

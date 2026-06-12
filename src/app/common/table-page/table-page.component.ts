@@ -30,7 +30,7 @@ export class TablePageComponent implements OnInit {
 
   ngOnInit() {
     this.route.params.subscribe((params) => {
-      const name = params['id']; // 👈 IMPORTANT
+      const name = params['id'];
 
       if (!name) {
         this.isDashboard = true;
@@ -40,8 +40,9 @@ export class TablePageComponent implements OnInit {
       this.isDashboard = false;
       this.title = name;
 
-      // 🔥 CONFIG MAP (CLEAN WAY)
+      // 🔥 CONFIG MAP
       const config: any = {
+
         Employee: {
           columns: [
             { key: 'id', label: 'ID' },
@@ -95,7 +96,14 @@ export class TablePageComponent implements OnInit {
             { key: 'station_name', label: 'Name' },
             { key: 'station_category', label: 'Category' },
           ],
-          data: [{ id: 1, station_code: 'MAS', station_name: 'Chennai', station_category: 'A1' }],
+          data: [
+            {
+              id: 1,
+              station_code: 'MAS',
+              station_name: 'Chennai',
+              station_category: 'A1',
+            },
+          ],
         },
 
         Department: {
@@ -114,6 +122,39 @@ export class TablePageComponent implements OnInit {
           ],
           data: [{ id: 1, option_code: 'OPT1', option_name: 'Yes' }],
         },
+
+        // 🔥 NEW SUPERVISOR MODULE
+        Supervisor: {
+          columns: [
+            { key: 'id', label: 'ID' },
+            { key: 'name', label: 'Supervisor Name' },
+            { key: 'username', label: 'Supervisor User Name' },
+            { key: 'password', label: 'Password', type: 'password' },
+            { key: 'mobile', label: 'Mobile Number' },
+            { key: 'department', label: 'Supervisor Department' },
+            { key: 'depot', label: 'Supervisor Depot' },
+            { key: 'station', label: 'Supervisor Station' },
+            {
+              key: 'role',
+              label: 'Roles',
+              type: 'dropdown',
+              options: ['Bill Dealer', 'Muster Supervisor'],
+            },
+          ],
+          data: [
+            {
+              id: 1,
+              name: 'Suresh',
+              username: 'suresh123',
+              password: '1234',
+              mobile: '9999999999',
+              department: 'Ops',
+              depot: 'D1',
+              station: 'MAS',
+              role: 'Bill Dealer',
+            },
+          ],
+        },
       };
 
       // ✅ APPLY CONFIG
@@ -121,10 +162,11 @@ export class TablePageComponent implements OnInit {
       this.data = config[name]?.data || [];
     });
   }
+
+  // 🔥 ADD
   addItem() {
     this.newItem = {};
 
-    // 🔥 initialize fields dynamically
     this.columns.forEach((col) => {
       if (col.key !== 'id') {
         this.newItem[col.key] = '';
@@ -135,14 +177,17 @@ export class TablePageComponent implements OnInit {
   }
 
   saveNewItem() {
-    this.newItem.id = this.data.length ? Math.max(...this.data.map((d) => d.id)) + 1 : 1;
+    this.newItem.id = this.data.length
+      ? Math.max(...this.data.map((d) => d.id)) + 1
+      : 1;
 
     this.data.push({ ...this.newItem });
     this.showAddModal = false;
   }
 
+  // 🔥 EDIT
   edit(item: any) {
-    this.selectedItem = { ...item }; // clone
+    this.selectedItem = { ...item };
     this.showEditModal = true;
   }
 
@@ -155,6 +200,8 @@ export class TablePageComponent implements OnInit {
 
     this.showEditModal = false;
   }
+
+  // 🔥 DELETE
   delete(item: any) {
     this.selectedItem = item;
     this.showDeleteModal = true;
@@ -165,7 +212,7 @@ export class TablePageComponent implements OnInit {
     this.showDeleteModal = false;
   }
 
-  // 🔴 COMMON CLOSE
+  // 🔴 CLOSE
   closeModal() {
     this.showAddModal = false;
     this.showEditModal = false;

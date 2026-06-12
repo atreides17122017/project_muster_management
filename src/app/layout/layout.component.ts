@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { Router, RouterOutlet } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms'; // ✅ IMPORTANT
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-layout',
@@ -20,33 +20,37 @@ export class LayoutComponent {
       title: 'Master Data',
       open: false,
       items: [
-        { name: 'Employee', id: 1 },
-        { name: 'Bill Unit', id: 2 },
-        { name: 'Stations', id: 3 },
-        { name: 'Department', id: 4 },
-        { name: 'Input Options', id: 5 },
+        { name: 'Employee' },
+        { name: 'Bill Unit' },
+        { name: 'Stations' },
+        { name: 'Department' },
+        { name: 'Input Options' },
         { name: 'Scrolling', route: '/scrolling' },
       ],
     },
     {
-      title: 'Roles',
-      open: false,
-      items: [
-        { name: 'Bill Dealer', route: '/bill-dealer', newTab: true },
-        { name: 'Muster Supervisor', route: '/muster-supervisor', newTab: true },
-      ],
-    },
+      title: 'Supervisor',
+      name: 'Supervisor' // ✅ FIXED
+    }
   ];
 
   toggleSidebar() {
     this.isCollapsed = !this.isCollapsed;
   }
 
-  navigate(item: any) {
+  toggleMenu(menu: any) {
+    menu.open = !menu.open;
+  }
+
+  navigate(item: any, event?: Event) {
+    if (event) {
+      event.stopPropagation();
+    }
+
     if (item.route) {
       this.router.navigate([item.route]);
     } else {
-      this.router.navigate(['/page', item.name]); // ✅ FIXED
+      this.router.navigate(['/page', item.name]);
     }
   }
 }
