@@ -1,0 +1,196 @@
+/* FIX: Separated and cleaned up the root background wrapper block */
+.page-wrapper {
+    min-height: 100vh;
+    max-height: 100vh;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    box-sizing: border-box;
+    background-size: cover !important;
+    background-position: center !important;
+    background-repeat: no-repeat !important;
+    background-attachment: fixed !important;
+}
+
+/* Master Page Headings */
+.main-portal-header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.main-portal-header h1 {
+    font-size: 2.4rem;
+    font-weight: 700;
+    color: #0f172a;
+    letter-spacing: 0.5px;
+    line-height: 1.2;
+    text-shadow: 0 2px 10px rgba(255, 255, 255, 0.9);
+}
+
+.main-portal-header h2 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #e31dab;
+    margin-top: 4px;
+    letter-spacing: 1px;
+}
+
+/* Card Structure Container */
+.login-card {
+    background: #ffffff; /* Changed from light gray #f5f5f5 back to clean white */
+    width: 100%;        /* Fixed broken 300% width value back to 100% standard */
+    max-width: 940px; 
+    height: 530px; 
+    display: flex;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 15px 35px rgba(15, 23, 42, 0.1);
+}
+
+/* Form Container Layout */
+.form-side {
+    flex: 0.9;
+    padding: 40px; 
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.form-header {
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+.rail-emblem {
+    width: 105px; 
+    height: auto;
+}
+
+/* Input Fields Grouping */
+.input-group {
+    margin-bottom: 22px;
+}
+
+/* UPDATED: Made "User Name" and "Password" headings larger, bolder, and high-contrast dark */
+.input-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 1.05rem;     /* Increased from 0.9rem to 1.05rem */
+    font-weight: 600;      /* Increased thickness from 500 to 600 */
+    color: #0f172a;        /* Changed from muted slate #1e293b to deep high-contrast charcoal */
+    letter-spacing: 0.3px;
+}
+
+/* FIX: Balanced layout values for uniform, identical text box sizing */
+.input-group input {
+    width: 100%;
+    padding: 13px 16px;    /* Increased and balanced padding values to keep shapes uniform */ 
+    border: 1.5px solid #cbd5e1;
+    border-radius: 8px;
+    outline: none;
+    font-size: 1rem;
+    color: #0f172a;
+    background-color: #f8fafc;
+    box-sizing: border-box; /* Ensures padding adjustments don't warp box structure dimensions */
+    transition: all 0.2s ease;
+}
+
+.input-group input:focus {
+    background-color: #ffffff;
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 218, 0.15);
+}
+
+/* FIX: Forces full width constraint on the password structural box layer */
+.password-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+/* Standardizes trailing space override behind hidden password characters */
+.password-container input {
+    padding-right: 48px !important;
+}
+
+/* Fixed positioning parameters for the interactive icon stack layer */
+#eyeIcon {
+    position: absolute;
+    right: 16px;
+    cursor: pointer;
+    color: #64748b;
+    font-size: 1.15rem;
+    z-index: 10;
+    transition: color 0.15s ease;
+}
+
+#eyeIcon:hover {
+    color: #0f172a;
+}
+
+/* Submit Action Button */
+.submit-btn {
+    width: 100%;
+    padding: 13px;
+    background-color: #eb258b;
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.05rem;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 5px;
+    transition: background-color 0.15s ease;
+}
+
+.submit-btn:hover {
+    background-color: #e60991;
+}
+
+/* Visual Card Section Slider Layout */
+.visual-side {
+    flex: 1.1;
+    position: relative;
+}
+
+.slide {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0;
+    animation: continuousFourFade 16s infinite ease-in-out;
+}
+
+.slide:nth-child(2) { animation-delay: 0s; }
+.slide:nth-child(3) { animation-delay: 4s; }
+.slide:nth-child(4) { animation-delay: 8s; }
+.slide:nth-child(5) { animation-delay: 12s; }
+
+@keyframes continuousFourFade {
+    0% { opacity: 0; }
+    5% { opacity: 1; }
+    25% { opacity: 1; }
+    30% { opacity: 0; }
+    100% { opacity: 0; }
+}
+
+/* Responsive Viewports */
+@media (max-width: 850px) {
+    .login-card {
+        flex-direction: column;
+        height: auto;
+    }
+    .visual-side {
+        display: none;
+    }
+    .form-side {
+        padding: 40px 24px;
+    }
+}

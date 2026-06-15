@@ -1,50 +1,72 @@
-<!-- HEADER -->
-<header class="header">
-  <button (click)="toggleSidebar()">☰</button>
-  <h2>Admin Dashboard</h2>
-</header>
+<!-- LOGIN PAGE -->
+<div *ngIf="router.url === '/login'">
 
-<!-- TICKER -->
-<div class="ticker-container">
-  <div class="ticker-track">
-    Important dates:
-    (1) NDA submission is due from the 1st to the 5th of every month
-    (2) Muster submission is due from the 11th to the 12th of every month
-  </div>
+  <router-outlet></router-outlet>
+
 </div>
 
-<!-- MAIN LAYOUT -->
-<div class="container" [class.collapsed]="isCollapsed">
+<!-- ALL OTHER PAGES -->
+<div *ngIf="router.url !== '/login'">
 
-  <aside>
-    <div class="menu" *ngFor="let menu of menus">
+  <!-- HEADER -->
+  <header class="header">
+    <button (click)="toggleSidebar()">☰</button>
+    <h2>Admin Dashboard</h2>
+  </header>
 
-      <!-- ✅ SINGLE MENU (Supervisor) -->
-      <div *ngIf="!menu.items || menu.items.length === 0"
-           class="menu-title single"
-           (click)="navigate(menu)">
+  <!-- TICKER -->
+  <div class="ticker-container">
+    <div class="ticker-track">
+      Important dates:
+      (1) NDA submission is due from the 1st to the 5th of every month
+      (2) Muster submission is due from the 11th to the 12th of every month
+    </div>
+  </div>
 
-        {{ menu.title }}
-      </div>
+  <!-- MAIN LAYOUT -->
+  <div class="container" [class.collapsed]="isCollapsed">
 
-      <!-- ✅ DROPDOWN MENU (Master Data only) -->
-      <div *ngIf="menu.items && menu.items.length">
+    <aside>
 
-        <div class="menu-title" (click)="toggleMenu(menu)">
-          <span>{{ menu.title }}</span>
+      <div class="menu" *ngFor="let menu of menus">
 
-          <!-- Arrow ONLY for dropdown -->
-          <span class="arrow" [class.open]="menu.open">▼</span>
+        <!-- SINGLE MENU -->
+        <div
+          *ngIf="!menu.items || menu.items.length === 0"
+          class="menu-title single"
+          (click)="navigate(menu)">
+
+          {{ menu.title }}
+
         </div>
 
-        <!-- SUBMENU -->
-        <div class="submenu" *ngIf="menu.open">
+        <!-- DROPDOWN MENU -->
+        <div *ngIf="menu.items && menu.items.length">
 
-          <div *ngFor="let item of menu.items"
-               class="submenu-item"
-               (click)="navigate(item, $event)">
+          <div class="menu-title" (click)="toggleMenu(menu)">
 
-            {{ item.name }}
+            <span>{{ menu.title }}</span>
+
+            <span
+              class="arrow"
+              [class.open]="menu.open">
+
+              ▼
+
+            </span>
+
+          </div>
+
+          <div class="submenu" *ngIf="menu.open">
+
+            <div
+              *ngFor="let item of menu.items"
+              class="submenu-item"
+              (click)="navigate(item, $event)">
+
+              {{ item.name }}
+
+            </div>
 
           </div>
 
@@ -52,11 +74,14 @@
 
       </div>
 
-    </div>
-  </aside>
+    </aside>
 
-  <main>
-    <router-outlet></router-outlet>
-  </main>
+    <main>
+
+      <router-outlet></router-outlet>
+
+    </main>
+
+  </div>
 
 </div>

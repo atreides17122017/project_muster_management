@@ -3,219 +3,676 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 
+import { ApiService } from '../../api';
+
 @Component({
-  selector: 'app-table-page',
-  standalone: true,
-  imports: [CommonModule, FormsModule],
-  templateUrl: './table-page.component.html',
-  styleUrls: ['./table-page.component.css'],
+selector: 'app-table-page',
+standalone: true,
+imports: [CommonModule, FormsModule],
+templateUrl: './table-page.component.html',
+styleUrls: ['./table-page.component.css'],
 })
 export class TablePageComponent implements OnInit {
-  title: string = '';
-  searchText: string = '';
-  isDashboard: boolean = true;
 
-  columns: any[] = [];
-  data: any[] = [];
+title: string = '';
+searchText: string = '';
+isDashboard: boolean = true;
 
-  // 🔥 MODAL STATES
-  showAddModal = false;
-  showEditModal = false;
-  showDeleteModal = false;
+columns: any[] = [];
+data: any[] = [];
 
-  selectedItem: any = null;
-  newItem: any = {};
+// MODAL STATES
+showAddModal = false;
+showEditModal = false;
+showDeleteModal = false;
 
-  constructor(private route: ActivatedRoute) {}
+selectedItem: any = null;
+newItem: any = {};
 
-  ngOnInit() {
-    this.route.params.subscribe((params) => {
-      const name = params['id'];
+constructor(
+private route: ActivatedRoute,
+private api: ApiService
+) {}
 
-      if (!name) {
-        this.isDashboard = true;
-        return;
+ngOnInit() {
+
+
+this.route.params.subscribe((params) => {
+
+  const name = params['id'];
+
+  if (!name) {
+    this.isDashboard = true;
+    return;
+  }
+
+  this.isDashboard = false;
+  this.title = name;
+
+  const config: any = {
+
+    Employee: {
+
+      columns: [
+
+        { key: 'id', label: 'ID' },
+
+        { key: 'pf_number', label: 'PF Number' },
+
+        { key: 'employee_name', label: 'Name' },
+
+        { key: 'mobile_number', label: 'Mobile' },
+
+        { key: 'employee_station', label: 'Station' },
+
+        { key: 'employee_department', label: 'Department' },
+
+        { key: 'employee_designation', label: 'Designation' },
+
+        { key: 'employee_bill_unit', label: 'Bill Unit' },
+
+        {
+          key: 'employee_manual_serial_number',
+          label: 'Manual Serial No'
+        }
+
+      ],
+
+      data: []
+
+    },
+
+    'Bill Unit': {
+  columns: [
+    { key: 'id', label: 'ID' },
+    { key: 'bill_unit_code', label: 'Code' },
+    { key: 'department', label: 'Department' },
+    { key: 'station', label: 'Station' },
+    { key: 'supervisor_id', label: 'Supervisor' }
+  ],
+  data: []
+},
+
+    Stations: {
+  columns: [
+    { key: 'id', label: 'ID' },
+    { key: 'station_code', label: 'Code' },
+    { key: 'station_name', label: 'Name' },
+    { key: 'station_category', label: 'Category' }
+  ],
+  data: []
+},
+
+    Department: {
+  columns: [
+    { key: 'id', label: 'ID' },
+    { key: 'department_name', label: 'Department Name' }
+  ],
+  data: []
+},
+
+    'Input Options': {
+
+  columns: [
+
+    { key: 'id', label: 'ID' },
+
+    { key: 'option_code', label: 'Code' },
+
+    { key: 'option_name', label: 'Name' }
+
+  ],
+
+  data: []
+
+},
+
+    Supervisor: {
+      columns: [
+        { key: 'id', label: 'ID' },
+        { key: 'name', label: 'Supervisor Name' },
+        { key: 'username', label: 'Supervisor User Name' },
+        { key: 'password', label: 'Password', type: 'password' },
+        { key: 'mobile', label: 'Mobile Number' },
+        { key: 'department', label: 'Supervisor Department' },
+        { key: 'depot', label: 'Supervisor Depot' },
+        { key: 'station', label: 'Supervisor Station' },
+        {
+          key: 'role',
+          label: 'Roles',
+          type: 'dropdown',
+          options: ['Bill Dealer', 'Muster Supervisor'],
+        },
+      ],
+      data: [
+        {
+          id: 1,
+          name: 'Suresh',
+          username: 'suresh123',
+          password: '1234',
+          mobile: '9999999999',
+          department: 'Ops',
+          depot: 'D1',
+          station: 'MAS',
+          role: 'Bill Dealer',
+        },
+      ],
+    },
+
+  };
+
+  this.columns = config[name]?.columns || [];
+  this.data = config[name]?.data || [];
+
+  // LOAD EMPLOYEES FROM LARAVEL
+  if (name === 'Employee') {
+
+    this.api.getEmployees().subscribe({
+
+      next: (response: any) => {
+
+        console.log(response);
+
+        this.data = response;
+
+      },
+
+      error: (error: any) => {
+
+        console.log(error);
+
       }
 
-      this.isDashboard = false;
-      this.title = name;
-
-      // 🔥 CONFIG MAP
-      const config: any = {
-
-        Employee: {
-          columns: [
-            { key: 'id', label: 'ID' },
-            { key: 'pf_number', label: 'PF Number' },
-            { key: 'name', label: 'Name' },
-            { key: 'mobile', label: 'Mobile' },
-            { key: 'station', label: 'Station' },
-            { key: 'department', label: 'Department' },
-            { key: 'designation', label: 'Designation' },
-            { key: 'bill_unit', label: 'Bill Unit' },
-            { key: 'manual_serial_number', label: 'Manual Serial No' },
-          ],
-          data: [
-            {
-              id: 1,
-              pf_number: 'PF001',
-              name: 'Ravi',
-              mobile: '9999999999',
-              station: 'MAS',
-              department: 'Ops',
-              designation: 'Clerk',
-              bill_unit: 'BU1',
-              manual_serial_number: 'MS1',
-            },
-          ],
-        },
-
-        'Bill Unit': {
-          columns: [
-            { key: 'id', label: 'ID' },
-            { key: 'bill_unit_code', label: 'Code' },
-            { key: 'department', label: 'Department' },
-            { key: 'station', label: 'Station' },
-            { key: 'supervisor_id', label: 'Supervisor' },
-          ],
-          data: [
-            {
-              id: 1,
-              bill_unit_code: 'BU001',
-              department: 'Ops',
-              station: 'MAS',
-              supervisor_id: 'SUP1',
-            },
-          ],
-        },
-
-        Stations: {
-          columns: [
-            { key: 'id', label: 'ID' },
-            { key: 'station_code', label: 'Code' },
-            { key: 'station_name', label: 'Name' },
-            { key: 'station_category', label: 'Category' },
-          ],
-          data: [
-            {
-              id: 1,
-              station_code: 'MAS',
-              station_name: 'Chennai',
-              station_category: 'A1',
-            },
-          ],
-        },
-
-        Department: {
-          columns: [
-            { key: 'id', label: 'ID' },
-            { key: 'department_name', label: 'Department Name' },
-          ],
-          data: [{ id: 1, department_name: 'Operations' }],
-        },
-
-        'Input Options': {
-          columns: [
-            { key: 'id', label: 'ID' },
-            { key: 'option_code', label: 'Code' },
-            { key: 'option_name', label: 'Name' },
-          ],
-          data: [{ id: 1, option_code: 'OPT1', option_name: 'Yes' }],
-        },
-
-        // 🔥 NEW SUPERVISOR MODULE
-        Supervisor: {
-          columns: [
-            { key: 'id', label: 'ID' },
-            { key: 'name', label: 'Supervisor Name' },
-            { key: 'username', label: 'Supervisor User Name' },
-            { key: 'password', label: 'Password', type: 'password' },
-            { key: 'mobile', label: 'Mobile Number' },
-            { key: 'department', label: 'Supervisor Department' },
-            { key: 'depot', label: 'Supervisor Depot' },
-            { key: 'station', label: 'Supervisor Station' },
-            {
-              key: 'role',
-              label: 'Roles',
-              type: 'dropdown',
-              options: ['Bill Dealer', 'Muster Supervisor'],
-            },
-          ],
-          data: [
-            {
-              id: 1,
-              name: 'Suresh',
-              username: 'suresh123',
-              password: '1234',
-              mobile: '9999999999',
-              department: 'Ops',
-              depot: 'D1',
-              station: 'MAS',
-              role: 'Bill Dealer',
-            },
-          ],
-        },
-      };
-
-      // ✅ APPLY CONFIG
-      this.columns = config[name]?.columns || [];
-      this.data = config[name]?.data || [];
     });
+
   }
+  if (name === 'Bill Unit') {
 
-  // 🔥 ADD
-  addItem() {
-    this.newItem = {};
+    this.api.getBillUnits().subscribe({
 
-    this.columns.forEach((col) => {
-      if (col.key !== 'id') {
-        this.newItem[col.key] = '';
+      next: (response: any) => {
+
+        console.log(response);
+
+        this.data = response;
+
+      },
+
+      error: (error: any) => {
+
+        console.log(error);
+
       }
+
     });
 
-    this.showAddModal = true;
   }
 
-  saveNewItem() {
-    this.newItem.id = this.data.length
-      ? Math.max(...this.data.map((d) => d.id)) + 1
-      : 1;
+  if (name === 'Stations') {
 
-    this.data.push({ ...this.newItem });
-    this.showAddModal = false;
-  }
+  this.api.getStations().subscribe({
 
-  // 🔥 EDIT
-  edit(item: any) {
-    this.selectedItem = { ...item };
-    this.showEditModal = true;
-  }
+    next: (response:any) => {
+      this.data = response;
+    },
 
-  updateItem() {
-    const index = this.data.findIndex((d) => d.id === this.selectedItem.id);
-
-    if (index !== -1) {
-      this.data[index] = { ...this.selectedItem };
+    error: (error:any) => {
+      console.log(error);
     }
 
-    this.showEditModal = false;
+  });
+
+}
+
+
+if (name === 'Department') {
+
+  this.api.getDepartments().subscribe({
+
+    next: (response:any) => {
+      this.data = response;
+    },
+
+    error: (error:any) => {
+      console.log(error);
+    }
+
+  });
+
+}
+if (name === 'Input Options') {
+
+  this.api.getInputOptions().subscribe({
+
+    next: (response:any) => {
+
+      this.data = response;
+
+    },
+
+    error: (error:any) => {
+
+      console.log(error);
+
+    }
+
+  });
+
+}
+
+
+});
+
+}
+
+addItem() {
+
+
+this.newItem = {};
+
+this.columns.forEach((col) => {
+
+  if (col.key !== 'id') {
+
+    this.newItem[col.key] = '';
+
   }
 
-  // 🔥 DELETE
-  delete(item: any) {
-    this.selectedItem = item;
-    this.showDeleteModal = true;
+});
+
+this.showAddModal = true;
+
+
+}
+
+saveNewItem() {
+
+  if (this.title === 'Employee') {
+
+    this.api.addEmployee(this.newItem).subscribe({
+
+      next: (response: any) => {
+
+        this.data.push(response.employee);
+
+        this.showAddModal = false;
+
+        this.newItem = {};
+
+      }
+
+    });
+
   }
 
-  confirmDelete() {
-    this.data = this.data.filter((d) => d.id !== this.selectedItem.id);
-    this.showDeleteModal = false;
+  else if (this.title === 'Bill Unit') {
+
+    this.api.addBillUnit(this.newItem).subscribe({
+
+      next: (response: any) => {
+
+        this.data.push(response.bill_unit);
+
+        this.showAddModal = false;
+
+        this.newItem = {};
+
+      },
+
+      error: (error: any) => {
+
+        console.log(error);
+
+      }
+
+    });
+
+  }
+  else if (this.title === 'Input Options') {
+
+  this.api.addInputOption(this.newItem).subscribe({
+
+    next: (response:any) => {
+
+      console.log(response);
+
+      this.data.push(response.input_option);
+
+      this.showAddModal = false;
+
+      this.newItem = {};
+
+    },
+
+    error: (error:any) => {
+
+      console.log(error);
+
+    }
+
+    });
+  }
+  else if (this.title === 'Stations') {
+
+    this.api.addStation(this.newItem).subscribe({
+
+      next: (response: any) => {
+
+        console.log(response);
+
+        this.data.push(response.station);
+
+        this.showAddModal = false;
+
+        this.newItem = {};
+
+      },
+
+      error: (error: any) => {
+
+        console.log(error);
+
+      }
+
+    });
+
+  }
+  else if (this.title === 'Department') 
+  {
+
+  this.api.addDepartment(this.newItem).subscribe({
+
+    next: (response: any) => {
+
+      console.log(response);
+
+      this.data.push(response.department);
+
+      this.showAddModal = false;
+
+      this.newItem = {};
+
+    },
+
+    error: (error: any) => {
+
+      console.log(error);
+
+    }
+
+  });
+
+}
+
+}
+
+edit(item: any) {
+
+
+this.selectedItem = { ...item };
+
+this.showEditModal = true;
+
+
+}
+
+updateItem() {
+
+  if (this.title === 'Employee') {
+
+    this.api.updateEmployee(
+      this.selectedItem.id,
+      this.selectedItem
+    ).subscribe({
+
+      next: (response: any) => {
+
+        const index = this.data.findIndex(
+          d => d.id === this.selectedItem.id
+        );
+
+        if (index !== -1) {
+
+          this.data[index] = response.employee;
+
+        }
+
+        this.showEditModal = false;
+
+      }
+
+    });
+
   }
 
-  // 🔴 CLOSE
-  closeModal() {
-    this.showAddModal = false;
-    this.showEditModal = false;
-    this.showDeleteModal = false;
+  else if (this.title === 'Bill Unit') {
+
+    this.api.updateBillUnit(
+      this.selectedItem.id,
+      this.selectedItem
+    ).subscribe({
+
+      next: (response: any) => {
+
+        const index = this.data.findIndex(
+          d => d.id === this.selectedItem.id
+        );
+
+        if (index !== -1) {
+
+          this.data[index] = response.bill_unit;
+
+        }
+
+        this.showEditModal = false;
+
+      }
+
+    });
+
   }
+  else if (this.title === 'Input Options') {
+
+  this.api.updateInputOption(
+    this.selectedItem.id,
+    this.selectedItem
+  ).subscribe({
+
+    next: (response:any) => {
+
+      const index = this.data.findIndex(
+        d => d.id === this.selectedItem.id
+      );
+
+      if (index !== -1) {
+
+        this.data[index] = response.input_option;
+
+      }
+
+      this.showEditModal = false;
+
+    }
+
+  });
+
+}
+
+  else if (this.title === 'Stations') {
+
+    this.api.updateStation(
+      this.selectedItem.id,
+      this.selectedItem
+    ).subscribe({
+
+      next: (response: any) => {
+
+        const index = this.data.findIndex(
+          d => d.id === this.selectedItem.id
+        );
+
+        if (index !== -1) {
+
+          this.data[index] = response.station;
+
+        }
+
+        this.showEditModal = false;
+
+      }
+
+    });
+
+  }
+  else if (this.title === 'Department') {
+
+  this.api.updateDepartment(
+    this.selectedItem.id,
+    this.selectedItem
+  ).subscribe({
+
+    next: (response: any) => {
+
+      const index = this.data.findIndex(
+        d => d.id === this.selectedItem.id
+      );
+
+      if (index !== -1) {
+
+        this.data[index] = response.department;
+
+      }
+
+      this.showEditModal = false;
+
+    }
+
+  });
+
+}
+
+}
+
+delete(item: any) {
+
+
+this.selectedItem = item;
+
+this.showDeleteModal = true;
+
+
+}
+
+confirmDelete() {
+
+  if (this.title === 'Employee') {
+
+    this.api.deleteEmployee(
+      this.selectedItem.id
+    ).subscribe({
+
+      next: () => {
+
+        this.data = this.data.filter(
+          d => d.id !== this.selectedItem.id
+        );
+
+        this.showDeleteModal = false;
+
+      }
+
+    });
+
+  }
+
+  else if (this.title === 'Bill Unit') {
+
+    this.api.deleteBillUnit(
+      this.selectedItem.id
+    ).subscribe({
+
+      next: () => {
+
+        this.data = this.data.filter(
+          d => d.id !== this.selectedItem.id
+        );
+
+        this.showDeleteModal = false;
+
+      }
+
+    });
+
+  }
+  else if (this.title === 'Input Options') {
+
+  this.api.deleteInputOption(
+    this.selectedItem.id
+  ).subscribe({
+
+    next: () => {
+
+      this.data = this.data.filter(
+        d => d.id !== this.selectedItem.id
+      );
+
+      this.showDeleteModal = false;
+
+    }
+
+  });
+
+}
+  else if (this.title === 'Stations') {
+
+    this.api.deleteStation(
+      this.selectedItem.id
+    ).subscribe({
+
+      next: () => {
+
+        this.data = this.data.filter(
+          d => d.id !== this.selectedItem.id
+        );
+
+        this.showDeleteModal = false;
+
+      }
+
+    });
+
+  }
+  else if (this.title === 'Department') {
+
+  this.api.deleteDepartment(
+    this.selectedItem.id
+  ).subscribe({
+
+    next: () => {
+
+      this.data = this.data.filter(
+        d => d.id !== this.selectedItem.id
+      );
+
+      this.showDeleteModal = false;
+
+    }
+
+  });
+
+}
+}
+
+closeModal() {
+
+
+this.showAddModal = false;
+
+this.showEditModal = false;
+
+this.showDeleteModal = false;
+
+
+}
+
 }

@@ -1,0 +1,94 @@
+<div class="page-wrapper"
+     [ngStyle]="{
+       'background': 'linear-gradient(rgba(239,230,255,0.85), rgba(239,230,255,0.85)), url(\'Train_Background.png\')'
+     }">
+     
+    <header class="main-portal-header">
+        <h1>MUSTER MANAGEMENT SYSTEM</h1>
+        <h2>VIJAYAWADA DIVISION</h2>
+    </header>
+
+    <div class="login-card">
+
+        <div class="form-side">
+
+            <div class="form-header">
+                <img src="Railway image.png"
+                     alt="Indian Railways Logo"
+                     class="rail-emblem">
+            </div>
+
+            <!-- FORM -->
+            <form (ngSubmit)="login()">
+
+                <div class="input-group">
+                    <label for="username">User Name</label>
+
+                    <input
+                        type="text"
+                        id="username"
+                        name="username"
+                        [(ngModel)]="username"
+                        placeholder="Enter user Name"
+                        required
+                        autocomplete="username">
+                </div>
+
+                <div class="input-group">
+
+                    <label for="password">Password</label>
+
+                    <div class="password-container">
+
+                        <input
+                            [type]="passwordFieldType"
+                            id="password"
+                            name="password"
+                            [(ngModel)]="password"
+                            placeholder="Enter Password"
+                            required
+                            autocomplete="current-password">
+
+                        <i
+                            id="eyeIcon"
+                            class="fa-solid"
+                            [ngClass]="isPasswordVisible ? 'fa-eye-slash' : 'fa-eye'"
+                            (click)="togglePasswordVisibility()">
+                        </i>
+
+                    </div>
+
+                </div>
+
+                <button type="submit" class="submit-btn">
+                    Submit
+                </button>
+
+            </form>
+
+        </div>
+
+        <div class="visual-side">
+            <div class="ambient-overlay"></div>
+
+            <img class="slide"
+                 src="slide1.png"
+                 alt="Vijayawada Division Meeting">
+
+            <img class="slide"
+                 src="slide2.png"
+                 alt="Indian Railways Locomotive">
+
+            <img class="slide"
+                 src="slide3.png"
+                 alt="Vijayawada Railway Station Building">
+
+            <img class="slide"
+                 src="slide4.png"
+                 alt="Vijayawada Junction Platform Sign">
+
+        </div>
+
+    </div>
+
+</div>

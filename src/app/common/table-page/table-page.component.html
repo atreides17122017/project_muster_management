@@ -1,3 +1,4 @@
+
 <!-- DASHBOARD -->
 <div *ngIf="isDashboard" class="dashboard">
   <h1 class="main-title">Muster Management System</h1>
@@ -19,14 +20,21 @@
   </div>
 
   <div class="search-bar">
-    <input type="text" placeholder="Search..." [(ngModel)]="searchText" />
+    <input
+      type="text"
+      placeholder="Search..."
+      [(ngModel)]="searchText"
+    />
   </div>
 
   <div class="table-container">
     <table>
       <thead>
         <tr>
-          <th *ngFor="let col of columns">{{ col.label }}</th>
+          <th *ngFor="let col of columns">
+            {{ col.label }}
+          </th>
+
           <th>Actions</th>
         </tr>
       </thead>
@@ -47,108 +55,164 @@
   </div>
 </div>
 
-<!-- ================= ADD MODAL ================= -->
+<!-- ADD MODAL -->
 <div *ngIf="showAddModal" class="modal-backdrop">
   <div class="modal-box">
+
     <h2>Add {{ title }}</h2>
 
     <div *ngFor="let col of columns">
-      <label *ngIf="col.key !== 'id'">{{ col.label }}</label>
 
-      <!-- DROPDOWN -->
-      <select
-        *ngIf="col.type === 'dropdown'"
-        [(ngModel)]="newItem[col.key]"
-      >
-        <option value="">Select</option>
-        <option *ngFor="let opt of col.options" [value]="opt">
-          {{ opt }}
-        </option>
-      </select>
+      <!-- Skip ID -->
+      <ng-container *ngIf="col.key !== 'id'">
 
-      <!-- PASSWORD -->
-      <input
-        *ngIf="col.type === 'password'"
-        type="password"
-        [(ngModel)]="newItem[col.key]"
-      />
+        <label>{{ col.label }}</label>
 
-      <!-- USERNAME VALIDATION -->
-      <input
-        *ngIf="col.key === 'username'"
-        [(ngModel)]="newItem[col.key]"
-        (input)="newItem[col.key] = newItem[col.key].replace(/[.&]/g, '')"
-      />
+        <!-- DROPDOWN -->
+        <select
+          *ngIf="col.type === 'dropdown'"
+          [(ngModel)]="newItem[col.key]"
+        >
+          <option value="">Select</option>
 
-      <!-- NORMAL INPUT -->
-      <input
-        *ngIf="!col.type && col.key !== 'username'"
-        [(ngModel)]="newItem[col.key]"
-      />
+          <option
+            *ngFor="let opt of col.options"
+            [value]="opt"
+          >
+            {{ opt }}
+          </option>
+        </select>
+
+        <!-- PASSWORD -->
+        <input
+          *ngIf="col.type === 'password'"
+          type="password"
+          [(ngModel)]="newItem[col.key]"
+        />
+
+        <!-- USERNAME -->
+        <input
+          *ngIf="col.key === 'username'"
+          [(ngModel)]="newItem[col.key]"
+          (input)="newItem[col.key] =
+            newItem[col.key].replace(/[.&]/g,'')"
+        />
+
+        <!-- NORMAL INPUT -->
+        <input
+          *ngIf="
+            !col.type &&
+            col.key !== 'username'
+          "
+          [(ngModel)]="newItem[col.key]"
+        />
+
+      </ng-container>
+
     </div>
 
     <div class="modal-actions">
-      <button (click)="saveNewItem()">Save</button>
-      <button (click)="closeModal()">Cancel</button>
+      <button (click)="saveNewItem()">
+        Save
+      </button>
+
+      <button (click)="closeModal()">
+        Cancel
+      </button>
     </div>
+
   </div>
 </div>
 
-<!-- ================= EDIT MODAL ================= -->
+<!-- EDIT MODAL -->
 <div *ngIf="showEditModal" class="modal-backdrop">
   <div class="modal-box">
+
     <h2>Edit {{ title }}</h2>
 
     <div *ngFor="let col of columns">
-      <label *ngIf="col.key !== 'id'">{{ col.label }}</label>
 
-      <!-- DROPDOWN -->
-      <select
-        *ngIf="col.type === 'dropdown'"
-        [(ngModel)]="selectedItem[col.key]"
-      >
-        <option value="">Select</option>
-        <option *ngFor="let opt of col.options" [value]="opt">
-          {{ opt }}
-        </option>
-      </select>
+      <!-- Skip ID -->
+      <ng-container *ngIf="col.key !== 'id'">
 
-      <!-- PASSWORD -->
-      <input
-        *ngIf="col.type === 'password'"
-        type="password"
-        [(ngModel)]="selectedItem[col.key]"
-      />
+        <label>{{ col.label }}</label>
 
-      <!-- USERNAME VALIDATION -->
-      <input
-        *ngIf="col.key === 'username'"
-        [(ngModel)]="selectedItem[col.key]"
-        (input)="selectedItem[col.key] = selectedItem[col.key].replace(/[.&]/g, '')"
-      />
+        <!-- DROPDOWN -->
+        <select
+          *ngIf="col.type === 'dropdown'"
+          [(ngModel)]="selectedItem[col.key]"
+        >
+          <option value="">Select</option>
 
-      <!-- NORMAL INPUT -->
-      <input
-        *ngIf="!col.type && col.key !== 'username'"
-        [(ngModel)]="selectedItem[col.key]"
-      />
+          <option
+            *ngFor="let opt of col.options"
+            [value]="opt"
+          >
+            {{ opt }}
+          </option>
+        </select>
+
+        <!-- PASSWORD -->
+        <input
+          *ngIf="col.type === 'password'"
+          type="password"
+          [(ngModel)]="selectedItem[col.key]"
+        />
+
+        <!-- USERNAME -->
+        <input
+          *ngIf="col.key === 'username'"
+          [(ngModel)]="selectedItem[col.key]"
+          (input)="selectedItem[col.key] =
+            selectedItem[col.key].replace(/[.&]/g,'')"
+        />
+
+        <!-- NORMAL INPUT -->
+        <input
+          *ngIf="
+            !col.type &&
+            col.key !== 'username'
+          "
+          [(ngModel)]="selectedItem[col.key]"
+        />
+
+      </ng-container>
+
     </div>
 
     <div class="modal-actions">
-      <button (click)="updateItem()">Update</button>
-      <button (click)="closeModal()">Cancel</button>
+      <button (click)="updateItem()">
+        Update
+      </button>
+
+      <button (click)="closeModal()">
+        Cancel
+      </button>
     </div>
+
   </div>
 </div>
 
-<!-- ================= DELETE MODAL ================= -->
+<!-- DELETE MODAL -->
 <div *ngIf="showDeleteModal" class="modal-backdrop">
   <div class="modal-box">
-    <h3>Are you sure you want to delete?</h3>
+
+    <h3>
+      Are you sure you want to delete?
+    </h3>
 
     <div class="modal-actions">
-      <button (click)="confirmDelete()">Yes</button>
-      <button (click)="closeModal()">No</button>
+
+      <button (click)="confirmDelete()">
+        Yes
+      </button>
+
+      <button (click)="closeModal()">
+        No
+      </button>
+
     </div>
+
   </div>
 </div>
+

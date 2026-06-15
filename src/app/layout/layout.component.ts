@@ -13,7 +13,7 @@ import { FormsModule } from '@angular/forms';
 export class LayoutComponent {
   isCollapsed = false;
 
-  constructor(private router: Router) {}
+  constructor(public router: Router) {}
 
   menus = [
     {
