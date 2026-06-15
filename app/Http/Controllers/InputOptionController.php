@@ -7,16 +7,26 @@ use App\Models\InputOption;
 
 class InputOptionController extends Controller
 {
-    // Get All
+    // GET ALL
     public function index()
     {
-        return response()->json(InputOption::all());
+        return response()->json(
+            InputOption::all()
+        );
     }
 
-    // Add
+    // CREATE
     public function store(Request $request)
     {
-        $inputOption = InputOption::create($request->all());
+        $request->validate([
+            'option_code' => 'required',
+            'option_name' => 'required'
+        ]);
+
+        $inputOption = InputOption::create([
+            'option_code' => $request->option_code,
+            'option_name' => $request->option_name
+        ]);
 
         return response()->json([
             'message' => 'Input Option Added Successfully',
@@ -24,7 +34,7 @@ class InputOptionController extends Controller
         ]);
     }
 
-    // Get Single
+    // GET SINGLE
     public function show($id)
     {
         return response()->json(
@@ -32,16 +42,34 @@ class InputOptionController extends Controller
         );
     }
 
-    // Update
+    // UPDATE
     public function update(Request $request, $id)
     {
+        $request->validate([
+            'option_code' => 'required',
+            'option_name' => 'required'
+        ]);
+
         $inputOption = InputOption::findOrFail($id);
 
-        $inputOption->update($request->all());
+        $inputOption->update([
+            'option_code' => $request->option_code,
+            'option_name' => $request->option_name
+        ]);
 
         return response()->json([
             'message' => 'Input Option Updated Successfully',
             'input_option' => $inputOption
+        ]);
+    }
+
+    // DELETE
+    public function destroy($id)
+    {
+        InputOption::findOrFail($id)->delete();
+
+        return response()->json([
+            'message' => 'Input Option Deleted Successfully'
         ]);
     }
 }

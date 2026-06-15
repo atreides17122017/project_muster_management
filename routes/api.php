@@ -27,26 +27,30 @@ Route::post('/stations', [StationController::class, 'store']);
 Route::get('/stations/{id}', [StationController::class, 'show']);
 Route::put('/stations/{id}', [StationController::class, 'update']);
 Route::delete('/stations/{id}', [StationController::class, 'destroy']);
-//bill units
+// BILL UNITS
 Route::get('/bill-units', [BillUnitController::class, 'index']);
 Route::post('/bill-units', [BillUnitController::class, 'store']);
 Route::get('/bill-units/{id}', [BillUnitController::class, 'show']);
-Route::put('/bill-units/{id}/supervisor', [BillUnitController::class, 'update']);
+Route::put('/bill-units/{id}', [BillUnitController::class, 'update']);
+Route::delete('/bill-units/{id}', [BillUnitController::class, 'destroy']);
 //departments
 Route::get('/departments', [DepartmentController::class, 'index']);
 Route::post('/departments', [DepartmentController::class, 'store']);
 Route::get('/departments/{id}', [DepartmentController::class, 'show']);
 Route::put('/departments/{id}', [DepartmentController::class, 'update']);
+Route::delete('/departments/{id}', [DepartmentController::class, 'destroy']);
 //designations
 Route::get('/designations', [DesignationController::class, 'index']);
 Route::post('/designations', [DesignationController::class, 'store']);
 Route::get('/designations/{id}', [DesignationController::class, 'show']);
 Route::put('/designations/{id}', [DesignationController::class, 'update']);
+Route::delete('/designations/{id}', [DesignationController::class, 'destroy']);
 //input options
 Route::get('/input-options', [InputOptionController::class, 'index']);
 Route::post('/input-options', [InputOptionController::class, 'store']);
 Route::get('/input-options/{id}', [InputOptionController::class, 'show']);
 Route::put('/input-options/{id}', [InputOptionController::class, 'update']);
+Route::delete('/input-options/{id}', [InputOptionController::class, 'destroy']);
 Route::middleware('auth:api')->group(function () {
 
     Route::get('/me', [AuthController::class, 'me']);

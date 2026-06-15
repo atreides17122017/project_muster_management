@@ -7,16 +7,24 @@ use App\Models\Designation;
 
 class DesignationController extends Controller
 {
-    // Get All Designations
+    // GET ALL
     public function index()
     {
-        return response()->json(Designation::all());
+        return response()->json(
+            Designation::all()
+        );
     }
 
-    // Add Designation
+    // CREATE
     public function store(Request $request)
     {
-        $designation = Designation::create($request->all());
+        $request->validate([
+            'designation_name' => 'required'
+        ]);
+
+        $designation = Designation::create([
+            'designation_name' => $request->designation_name
+        ]);
 
         return response()->json([
             'message' => 'Designation Added Successfully',
@@ -24,7 +32,7 @@ class DesignationController extends Controller
         ]);
     }
 
-    // Get Single Designation
+    // GET SINGLE
     public function show($id)
     {
         return response()->json(
@@ -32,16 +40,32 @@ class DesignationController extends Controller
         );
     }
 
-    // Edit Designation
+    // UPDATE
     public function update(Request $request, $id)
     {
+        $request->validate([
+            'designation_name' => 'required'
+        ]);
+
         $designation = Designation::findOrFail($id);
 
-        $designation->update($request->all());
+        $designation->update([
+            'designation_name' => $request->designation_name
+        ]);
 
         return response()->json([
             'message' => 'Designation Updated Successfully',
             'designation' => $designation
+        ]);
+    }
+
+    // DELETE
+    public function destroy($id)
+    {
+        Designation::findOrFail($id)->delete();
+
+        return response()->json([
+            'message' => 'Designation Deleted Successfully'
         ]);
     }
 }

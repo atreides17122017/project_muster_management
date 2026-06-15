@@ -7,16 +7,24 @@ use App\Models\Department;
 
 class DepartmentController extends Controller
 {
-    // Get All Departments
+    // GET ALL
     public function index()
     {
-        return response()->json(Department::all());
+        return response()->json(
+            Department::all()
+        );
     }
 
-    // Add Department
+    // CREATE
     public function store(Request $request)
     {
-        $department = Department::create($request->all());
+        $request->validate([
+            'department_name' => 'required'
+        ]);
+
+        $department = Department::create([
+            'department_name' => $request->department_name
+        ]);
 
         return response()->json([
             'message' => 'Department Added Successfully',
@@ -24,7 +32,7 @@ class DepartmentController extends Controller
         ]);
     }
 
-    // Get Single Department
+    // GET SINGLE
     public function show($id)
     {
         return response()->json(
@@ -32,16 +40,32 @@ class DepartmentController extends Controller
         );
     }
 
-    // Edit Department
+    // UPDATE
     public function update(Request $request, $id)
     {
+        $request->validate([
+            'department_name' => 'required'
+        ]);
+
         $department = Department::findOrFail($id);
 
-        $department->update($request->all());
+        $department->update([
+            'department_name' => $request->department_name
+        ]);
 
         return response()->json([
             'message' => 'Department Updated Successfully',
             'department' => $department
+        ]);
+    }
+
+    // DELETE
+    public function destroy($id)
+    {
+        Department::findOrFail($id)->delete();
+
+        return response()->json([
+            'message' => 'Department Deleted Successfully'
         ]);
     }
 }

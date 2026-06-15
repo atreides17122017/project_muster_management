@@ -7,16 +7,21 @@ use App\Models\BillUnit;
 
 class BillUnitController extends Controller
 {
-    // Get All Bill Units
+    // GET ALL
     public function index()
     {
         return response()->json(BillUnit::all());
     }
 
-    // Add Bill Unit
+    // CREATE
     public function store(Request $request)
     {
-        $billUnit = BillUnit::create($request->all());
+        $billUnit = BillUnit::create([
+            'bill_unit_code' => $request->bill_unit_code,
+            'department' => $request->department,
+            'station' => $request->station,
+            'supervisor_id' => $request->supervisor_id
+        ]);
 
         return response()->json([
             'message' => 'Bill Unit Added Successfully',
@@ -24,7 +29,7 @@ class BillUnitController extends Controller
         ]);
     }
 
-    // Get Single Bill Unit
+    // GET SINGLE
     public function show($id)
     {
         return response()->json(
@@ -32,26 +37,25 @@ class BillUnitController extends Controller
         );
     }
 
-    // Update Supervisor Only
-   public function update(Request $request, $id)
-{
-    $request->validate([
-        'supervisor_id' => 'required'
-    ]);
+    // UPDATE
+    public function update(Request $request, $id)
+    {
+        $billUnit = BillUnit::findOrFail($id);
 
-    $billUnit = BillUnit::findOrFail($id);
+        $billUnit->update([
+            'bill_unit_code' => $request->bill_unit_code,
+            'department' => $request->department,
+            'station' => $request->station,
+            'supervisor_id' => $request->supervisor_id
+        ]);
 
-    $billUnit->supervisor_id = $request->supervisor_id;
+        return response()->json([
+            'message' => 'Bill Unit Updated Successfully',
+            'bill_unit' => $billUnit
+        ]);
+    }
 
-    $billUnit->save();
-
-    return response()->json([
-        'message' => 'Supervisor Updated Successfully',
-        'bill_unit' => $billUnit
-    ]);
-}
-
-    // Delete Bill Unit
+    // DELETE
     public function destroy($id)
     {
         BillUnit::findOrFail($id)->delete();

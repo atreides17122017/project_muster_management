@@ -9,23 +9,21 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-public function up(): void
-{
-    Schema::create('bill_units', function (Blueprint $table) {
+    public function up(): void
+    {
+        Schema::create('stations', function (Blueprint $table) {
 
-        $table->id();
+            $table->id();
 
-        $table->string('bill_unit_code')->unique();
+            $table->string('station_code');
 
-        $table->string('department');
+            $table->string('station_name')->unique();
 
-        $table->text('station');
+            $table->string('station_category');
 
-        $table->unsignedBigInteger('supervisor_id');
-
-        $table->timestamps();
-    });
-}
+            $table->timestamps();
+        });
+    }
 
     /**
      * Reverse the migrations.
