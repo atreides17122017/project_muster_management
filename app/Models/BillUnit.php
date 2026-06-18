@@ -7,9 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 class BillUnit extends Model
 {
     protected $fillable = [
-        'bill_unit_code',
-        'department',
-        'station',
-        'supervisor_id'
-    ];
+    'bill_unit_code',
+    'bill_unit',
+    'department',
+    'station'
+];
 }

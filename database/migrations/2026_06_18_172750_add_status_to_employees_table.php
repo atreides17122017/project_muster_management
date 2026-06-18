@@ -11,19 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('bill_units', function (Blueprint $table) {
+        Schema::table('employees', function (Blueprint $table) {
 
-            $table->id();
+            $table->enum('status', ['draft', 'submitted'])
+                  ->default('draft')
+                  ->after('upload_file');
 
-            $table->string('bill_unit_code')->unique();
-
-            $table->string('bill_unit');
-
-            $table->string('department');
-
-            $table->text('station')->nullable();
-
-            $table->timestamps();
         });
     }
 
@@ -32,6 +25,10 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('bill_units');
+        Schema::table('employees', function (Blueprint $table) {
+
+            $table->dropColumn('status');
+
+        });
     }
 };

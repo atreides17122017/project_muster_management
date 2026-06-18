@@ -18,9 +18,9 @@ class BillUnitController extends Controller
     {
         $billUnit = BillUnit::create([
             'bill_unit_code' => $request->bill_unit_code,
-            'department' => $request->department,
-            'station' => $request->station,
-            'supervisor_id' => $request->supervisor_id
+            'bill_unit'      => $request->bill_unit,
+            'department'     => $request->department,
+            'station'        => $request->station
         ]);
 
         return response()->json([
@@ -44,9 +44,9 @@ class BillUnitController extends Controller
 
         $billUnit->update([
             'bill_unit_code' => $request->bill_unit_code,
-            'department' => $request->department,
-            'station' => $request->station,
-            'supervisor_id' => $request->supervisor_id
+            'bill_unit'      => $request->bill_unit,
+            'department'     => $request->department,
+            'station'        => $request->station
         ]);
 
         return response()->json([

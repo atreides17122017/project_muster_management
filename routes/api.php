@@ -8,13 +8,14 @@ use App\Http\Controllers\BillUnitController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\DesignationController;
 use App\Http\Controllers\InputOptionController;
+use App\Http\Controllers\SupervisorController;
+use App\Http\Controllers\EmployeeNdaDetailController;
 //users
 Route::get('/users', [AuthController::class, 'getUsers']);
 Route::put('/update-user/{id}', [AuthController::class, 'updateUser']);
 Route::delete('/delete-user/{id}', [AuthController::class, 'deleteUser']);
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/add-user', [AuthController::class, 'addUser']);
-Route::get('/supervisors', [AuthController::class, 'getSupervisors']);
 //employees
 Route::get('/employees', [EmployeeController::class, 'index']);
 Route::post('/employees', [EmployeeController::class, 'store']);
@@ -51,6 +52,23 @@ Route::post('/input-options', [InputOptionController::class, 'store']);
 Route::get('/input-options/{id}', [InputOptionController::class, 'show']);
 Route::put('/input-options/{id}', [InputOptionController::class, 'update']);
 Route::delete('/input-options/{id}', [InputOptionController::class, 'destroy']);
+//supervisor
+// supervisors
+Route::get('/supervisors', [SupervisorController::class, 'index']);
+Route::post('/supervisors', [SupervisorController::class, 'store']);
+Route::get('/supervisors/{id}', [SupervisorController::class, 'show']);
+Route::put('/supervisors/{id}', [SupervisorController::class, 'update']);
+Route::delete('/supervisors/{id}', [SupervisorController::class, 'destroy']);
+//employee nda details
+Route::get('/employee-nda-details', [EmployeeNdaDetailController::class, 'index']);
+Route::post('/employee-nda-details', [EmployeeNdaDetailController::class, 'store']);
+Route::get('/employee-nda-details/{id}', [EmployeeNdaDetailController::class, 'show']);
+Route::put('/employee-nda-details/{id}', [EmployeeNdaDetailController::class, 'update']);
+Route::delete('/employee-nda-details/{id}', [EmployeeNdaDetailController::class, 'destroy']);
+Route::get(
+    '/employee-nda-details/employee/{pf_number}',
+    [EmployeeNdaDetailController::class, 'getByPfNumber']
+);
 Route::middleware('auth:api')->group(function () {
 
     Route::get('/me', [AuthController::class, 'me']);

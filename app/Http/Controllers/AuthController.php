@@ -136,11 +136,5 @@ public function deleteUser($id)
         'message' => 'User Deleted Successfully'
     ]);
 }
-// Get all supervisors
-public function getSupervisors()
-{
-    $supervisors = User::where('role', 'supervisor')->get();
-
-    return response()->json($supervisors);
-}
+// Get all supervisors}
 }
