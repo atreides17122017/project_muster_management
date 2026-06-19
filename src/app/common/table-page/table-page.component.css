@@ -1,90 +1,128 @@
-.dashboard {
-  padding: 30px;
+/* ===== MERGED VERSION (SAFE) ===== */
+
+.dashboard,
+.page {
+  padding: 10px 0;
+  box-sizing: border-box;
+  background: #f5f6fa;
+  height: 100%;
 }
 
 .main-title {
   font-size: 28px;
-  margin-bottom: 20px;
-}
-
-.cards {
-  display: flex;
-  gap: 20px;
-  flex-wrap: wrap;
-}
-
-.card {
-  background: white;
-  padding: 20px;
-  border-radius: 10px;
-  width: 180px;
-  text-align: center;
-  font-weight: bold;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-  cursor: pointer;
-}
-
-/* TABLE PAGE */
-
-.page {
-  padding: 20px;
-  background: #f5f6fa;
-  height: 100%;
+  font-weight: 700;
+  color: #0f172a;
+  margin-bottom: 25px;
+  border-left: 5px solid #ec4899;
+  padding-left: 15px;
 }
 
 .page-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 15px;
+  margin-bottom: 25px;
+  width: 100%;
+}
+
+.page-header h2 {
+  font-size: 26px;
+  color: #0f172a;
+  font-weight: 700;
+  margin: 0;
 }
 
 .add-btn {
-  background: #2f80ed;
+  background: linear-gradient(135deg, #ec4899 0%, #be185d 100%);
   color: white;
   border: none;
-  padding: 8px 14px;
-  border-radius: 6px;
+  padding: 11px 24px;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 14px;
   cursor: pointer;
+  box-shadow: 0 4px 12px rgba(236, 72, 153, 0.25);
 }
 
 .search-bar {
-  margin-bottom: 15px;
+  margin-bottom: 30px;
 }
 
 .search-bar input {
-  width: 250px;
-  padding: 6px;
+  width: 280px;
+  padding: 11px 14px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  background: #ffffff;
 }
 
+/* ================= TABLE ================= */
+
 .table-container {
-  background: white;
-  border-radius: 8px;
-  padding: 10px;
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 12px;
+  overflow-x: auto;
+  overflow-y: auto;
+  max-height: calc(100vh - 290px);
 }
 
 table {
-  width: 100%;
+  width: max-content;
+  min-width: 100%;
   border-collapse: collapse;
 }
 
-th {
-  background: #eef1f7;
-  padding: 10px;
-  text-align: left;
+th,
+td {
+  padding: 14px;
+  border: 1px solid #e5e7eb;
+  white-space: nowrap;
 }
 
-td {
-  padding: 10px;
-  border-top: 1px solid #ddd;
+th {
+  background: #f8fafc;
+  font-weight: 700;
+}
+
+th:last-child,
+td:last-child {
+  min-width: 140px;
+  text-align: center;
+}
+
+/* ================= ACTIONS ================= */
+
+.actions {
+  text-align: center;
 }
 
 .actions button {
-  border: none;
-  background: none;
-  cursor: pointer;
-  margin-right: 5px;
+  margin: 0 5px;
 }
+
+.icon-btn {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  padding: 6px;
+  font-size: 20px;
+}
+
+.edit-btn {
+  color: #0369a1;
+}
+
+.delete-btn {
+  color: #b91c1c;
+}
+
+.icon-btn:hover {
+  background: #f1f5f9;
+  border-radius: 6px;
+}
+
+/* ================= MODALS ================= */
 
 .modal-backdrop {
   position: fixed;
@@ -92,8 +130,7 @@ td {
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0,0,0,0.6);
-
+  background: rgba(0, 0, 0, 0.6);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -105,18 +142,4 @@ td {
   padding: 25px;
   border-radius: 10px;
   width: 300px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.modal-box input {
-  padding: 8px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-}
-
-.modal-actions {
-  display: flex;
-  justify-content: space-between;
 }

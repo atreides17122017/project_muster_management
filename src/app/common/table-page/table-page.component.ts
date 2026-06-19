@@ -20,6 +20,8 @@ isDashboard: boolean = true;
 
 columns: any[] = [];
 data: any[] = [];
+scrollingText: string = '';
+
 
 // MODAL STATES
 showAddModal = false;
@@ -88,7 +90,6 @@ this.route.params.subscribe((params) => {
     { key: 'bill_unit_code', label: 'Code' },
     { key: 'department', label: 'Department' },
     { key: 'station', label: 'Station' },
-    { key: 'supervisor_id', label: 'Supervisor' }
   ],
   data: []
 },
@@ -135,6 +136,7 @@ this.route.params.subscribe((params) => {
         { key: 'password', label: 'Password', type: 'password' },
         { key: 'mobile', label: 'Mobile Number' },
         { key: 'department', label: 'Supervisor Department' },
+        { key: 'bill_unit', label: 'Bill Unit' },
         { key: 'depot', label: 'Supervisor Depot' },
         { key: 'station', label: 'Supervisor Station' },
         {
@@ -152,6 +154,7 @@ this.route.params.subscribe((params) => {
           password: '1234',
           mobile: '9999999999',
           department: 'Ops',
+          bill_unit: 'BU-01',
           depot: 'D1',
           station: 'MAS',
           role: 'Bill Dealer',
@@ -675,4 +678,11 @@ this.showDeleteModal = false;
 
 }
 
+saveScrolling() {
+  localStorage.setItem('scrollingText', this.scrollingText);
+  alert('Scrolling updated');
 }
+
+
+}
+

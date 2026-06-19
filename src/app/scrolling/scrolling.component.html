@@ -1,8 +1,42 @@
-<h2>Scrolling Text Details</h2>
+<div class="scrolling-container">
 
-<h3>TEXT</h3>
-<p>{{ text }}</p>
+  <h1 class="title">SCROLLING TEXT DETAILS</h1>
 
-<h3>NOTICEBOARD</h3>
+  <table class="scrolling-table">
 
-<div [innerHTML]="noticeboard"></div>
+    <tr>
+      <td class="label-cell">TEXT</td>
+
+      <td>
+        <textarea
+          rows="3"
+          [(ngModel)]="text">
+        </textarea>
+      </td>
+    </tr>
+
+    <tr>
+      <td class="label-cell">NOTICEBOARD</td>
+
+      <td>
+        <textarea
+          rows="8"
+          [(ngModel)]="noticeboard">
+        </textarea>
+      </td>
+    </tr>
+
+    <tr>
+      <td colspan="2" class="submit-row">
+
+        <button class="submit-btn"
+                (click)="saveScrolling()">
+          Submit
+        </button>
+
+      </td>
+    </tr>
+
+  </table>
+
+</div>

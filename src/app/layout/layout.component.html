@@ -1,87 +1,89 @@
 <!-- LOGIN PAGE -->
 <div *ngIf="router.url === '/login'">
-
   <router-outlet></router-outlet>
-
 </div>
 
-<!-- ALL OTHER PAGES -->
-<div *ngIf="router.url !== '/login'">
-
-  <!-- HEADER -->
-  <header class="header">
-    <button (click)="toggleSidebar()">☰</button>
-    <h2>Admin Dashboard</h2>
-  </header>
-
-  <!-- TICKER -->
-  <div class="ticker-container">
-    <div class="ticker-track">
-      Important dates:
-      (1) NDA submission is due from the 1st to the 5th of every month
-      (2) Muster submission is due from the 11th to the 12th of every month
+<!-- MAIN APP -->
+<div *ngIf="router.url !== '/login'" class="dashboard-container" [class.collapsed]="isCollapsed">
+  <!-- SIDEBAR -->
+  <aside>
+    <div class="sidebar-brand">
+      <img src="/Railway image.png" class="sidebar-logo" />
+      <span>Admin</span>
     </div>
-  </div>
 
-  <!-- MAIN LAYOUT -->
-  <div class="container" [class.collapsed]="isCollapsed">
-
-    <aside>
-
-      <div class="menu" *ngFor="let menu of menus">
-
+    <nav class="sidebar-nav">
+      <div class="menu-wrapper" *ngFor="let menu of menus">
         <!-- SINGLE MENU -->
         <div
           *ngIf="!menu.items || menu.items.length === 0"
           class="menu-title single"
-          (click)="navigate(menu)">
-
-          {{ menu.title }}
-
+          (click)="navigate(menu)"
+        >
+          <span>{{ menu.title }}</span>
         </div>
 
         <!-- DROPDOWN MENU -->
         <div *ngIf="menu.items && menu.items.length">
-
           <div class="menu-title" (click)="toggleMenu(menu)">
-
             <span>{{ menu.title }}</span>
-
-            <span
-              class="arrow"
-              [class.open]="menu.open">
-
-              ▼
-
-            </span>
-
+            <span class="arrow" [class.open]="menu.open">▼</span>
           </div>
 
           <div class="submenu" *ngIf="menu.open">
-
             <div
               *ngFor="let item of menu.items"
               class="submenu-item"
-              (click)="navigate(item, $event)">
-
+              (click)="navigate(item, $event)"
+            >
               {{ item.name }}
-
             </div>
-
           </div>
-
         </div>
-
       </div>
 
-    </aside>
+      <!-- LOGOUT -->
+      <div class="logout-container">
+        <hr class="nav-divider" />
 
-    <main>
+        <div class="menu-title single logout-box" (click)="router.navigate(['/login'])">
+          <span>Logout</span>
+        </div>
+      </div>
+    </nav>
+  </aside>
 
+  <!-- MAIN CONTENT -->
+  <main>
+    <!-- HEADER -->
+    <header class="top-navbar">
+      <button class="toggle-btn" (click)="toggleSidebar()">☰</button>
+
+      <div class="header-titles">
+        <h1>MUSTER MANAGEMENT SYSTEM</h1>
+        <h2>VIJAYAWADA DIVISION • SOUTH CENTRAL RAILWAY</h2>
+      </div>
+    </header>
+
+    <!-- TICKER -->
+    <div class="ticker-container">
+      <div class="ticker-track">
+        {{ getScrollingText() }}
+      </div>
+    </div>
+
+    <!-- PAGE CONTENT -->
+    <div class="workspace-padding">
       <router-outlet></router-outlet>
+    </div>
+  </main>
 
-    </main>
+  <!-- NOTICEBOARD MODAL -->
+  <div *ngIf="showNoticeModal" class="notice-modal-backdrop">
+    <div class="notice-modal">
+      <button class="close-btn" (click)="closeNoticeModal()">×</button>
 
+      <div class="notice-content" [innerHTML]="noticeboard"></div>
+    </div>
   </div>
-
 </div>
