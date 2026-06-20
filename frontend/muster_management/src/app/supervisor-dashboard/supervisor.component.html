@@ -1,0 +1,481 @@
+<div class="dashboard-container">
+  
+  <div class="modal-backdrop-blur animate-in" *ngIf="showInstructionsModal">
+    <div class="modal-content-card">
+      <div class="modal-header-strip">
+        <h3>SYSTEM INSTRUCTIONS & SUBMISSION GUIDELINES</h3>
+        <button type="button" class="close-modal-x-btn" (click)="dismissInstructionsModal()">×</button>
+      </div>
+      <div class="modal-body-scroller">
+        <ol class="ordered-instruction-prose">
+          <li>Muster should be submitted before <strong>12th of every month</strong>.</li>
+          <li>Joining date / Relieving date in <strong>MUSTER</strong> will appear in MOD statements must be compulsory Updated.</li>
+          <li>Relieving/Joining/transfer/Sick Memos should be uploaded and entries must be done in MMS without these documents should not be drawn it is the role responsibilities of the supervisors to ensure this.</li>
+          <li>For NDA and Musters related Grievances please use the helpdesk option only this is to be used before <strong>10th of every month</strong>.</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+
+  <aside class="sidebar" [ngClass]="{ 'sidebar-closed': !isSidebarOpen }">
+    <div class="sidebar-brand">
+      <img src="Railway image.png" alt="IR Logo" class="sidebar-logo">
+      <span *ngIf="isSidebarOpen">Supervisor</span>
+    </div>
+    
+    <nav class="sidebar-nav">
+      <button type="button" class="nav-item" [class.active]="activeTab === 'employee-list'" (click)="switchTab('employee-list')">
+        <i class="fa-solid fa-users"></i> <span *ngIf="isSidebarOpen">Employee List</span>
+      </button>
+      <button type="button" class="nav-item" [class.active]="activeTab === 'rent-roll'" (click)="switchTab('rent-roll')">
+        <i class="fa-solid fa-house-user"></i> <span *ngIf="isSidebarOpen">Rent Role Statement</span>
+      </button>
+      <button type="button" class="nav-item" [class.active]="activeTab === 'nda-hours'" (click)="switchTab('nda-hours')">
+        <i class="fa-solid fa-business-time"></i> <span *ngIf="isSidebarOpen">Add NDA</span>
+      </button>
+      <button type="button" class="nav-item" [class.active]="activeTab === 'scale-check'" (click)="switchTab('scale-check')">
+        <i class="fa-solid fa-sliders"></i> <span *ngIf="isSidebarOpen">Scale Check</span>
+      </button>
+      <button type="button" class="nav-item" [class.active]="activeTab === 'muster-kit'" (click)="switchTab('muster-kit')">
+        <i class="fa-solid fa-box-archive"></i> <span *ngIf="isSidebarOpen">Muster Kit</span>
+      </button>
+      <button type="button" class="nav-item" [class.active]="activeTab === 'help-desk'" (click)="switchTab('help-desk')">
+        <i class="fa-solid fa-headset"></i> <span *ngIf="isSidebarOpen">Help Desk</span>
+      </button>
+      <button type="button" class="nav-item" [class.active]="activeTab === 'password-submit'" (click)="switchTab('password-submit')">
+        <i class="fa-solid fa-shield-halved"></i> <span *ngIf="isSidebarOpen">Password</span>
+      </button>
+      
+      <hr class="nav-divider">
+      <button type="button" class="nav-item logout" (click)="logout()">
+        <i class="fa-solid fa-right-from-bracket"></i> <span *ngIf="isSidebarOpen">Logout</span>
+      </button>
+    </nav>
+  </aside>
+
+  <div class="sidebar-overlay-mask" *ngIf="!isSidebarOpen" (click)="toggleSidebar()"></div>
+
+  <div class="main-content">
+    <header class="top-navbar">
+      <button type="button" class="toggle-btn" (click)="toggleSidebar()">
+        <i class="fa-solid" [ngClass]="isSidebarOpen ? 'fa-bars-staggered' : 'fa-bars'"></i>
+      </button>
+      <div class="header-titles">
+        <h1>MUSTER MANAGEMENT SYSTEM</h1>
+        <h2>VIJAYAWADA DIVISION • SOUTH CENTRAL RAILWAY</h2>
+      </div>
+    </header>
+
+    <div class="workspace-padding">
+      <div class="stats-grid">
+        <div class="stat-card profile-card">
+          <h3>Active Supervisor Profile</h3>
+          <p class="stat-number user-title">N. SATISH KUMAR</p>
+          <span class="meta-label">ID Badge: <strong>719</strong></span>
+        </div>
+        <div class="stat-card active-period-card">
+          <h3>Current Active Muster Period</h3>
+          <p class="stat-number period-range">11-05-2026 to 10-06-2026</p>
+        </div>
+      </div>
+
+      <div class="workspace-action-controls-bar">
+        <div class="search-input-wrapper-inline">
+          <input type="text" [(ngModel)]="searchText" placeholder="Search" class="global-tab-search-control">
+        </div>
+        <button type="button" class="action-print-trigger-btn" (click)="triggerPrintJob()">PRINT PAGE</button>
+      </div>
+
+      <div *ngIf="activeTab === 'employee-list'" class="tab-panel-fade">
+        <div class="content-panel-wrapper">
+          <div class="panel-header-inline"><h3>Employee List</h3></div>
+
+          <div *ngIf="editingEmployeeId !== null" class="inline-editor-card animate-in">
+            <h4 class="font-semibold text-magenta-color margin-bottom-md">Modify Master Personnel Parameters</h4>
+            <div class="editor-grid-inputs-all-fields">
+              <div class="input-field-unit"><label>PF Number</label><input type="text" [(ngModel)]="editEmployeeForm.pf" class="form-control"></div>
+              <div class="input-field-unit"><label>Employee Name</label><input type="text" [(ngModel)]="editEmployeeForm.name" class="form-control"></div>
+              <div class="input-field-unit"><label>Employee Station</label><input type="text" [(ngModel)]="editEmployeeForm.station" class="form-control"></div>
+              <div class="input-field-unit"><label>Employee Department</label><input type="text" [(ngModel)]="editEmployeeForm.dept" class="form-control"></div>
+              <div class="input-field-unit"><label>Employee Depot</label><input type="text" [(ngModel)]="editEmployeeForm.depo" class="form-control"></div>
+              <div class="input-field-unit"><label>Employee Bill Unit</label><input type="text" [(ngModel)]="editEmployeeForm.unit" class="form-control"></div>
+              <div class="input-field-unit"><label>Employee Designation</label><input type="text" [(ngModel)]="editEmployeeForm.desig" class="form-control"></div>
+              <div class="input-field-unit"><label>Employee Mobile Number</label><input type="text" [(ngModel)]="editEmployeeForm.mobile" class="form-control"></div>
+              <div class="input-field-unit"><label>Manual Muster Serial No.</label><input type="text" [(ngModel)]="editEmployeeForm.manualSerial" class="form-control"></div>
+            </div>
+            <div class="editor-actions-strip margin-top-md">
+              <button type="button" class="btn-action-save" (click)="saveEmployeeModifications()">Update Changes</button>
+              <button type="button" class="btn-action-cancel" (click)="editingEmployeeId = null">Cancel</button>
+            </div>
+          </div>
+
+          <div class="glass-table-container">
+            <table class="modern-grid-table table-compact">
+              <thead>
+                <tr><th>SNo</th><th>PF Number</th><th>Name</th><th>Designation</th><th>Mobile</th><th>Department</th><th>Depo</th><th>Station</th><th>Bill Unit</th><th>Action Operations</th></tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let emp of getFilteredData(masterEmployees)">
+                  <td>{{emp.sNo}}</td>
+                  <td class="bold-mono">{{emp.pf}}</td>
+                  <td><strong>{{emp.name}}</strong></td>
+                  <td>{{emp.desig}}</td>
+                  <td>{{emp.mobile}}</td>
+                  <td class="muted-text-sm">{{emp.dept}}</td>
+                  <td class="muted-text-sm">{{emp.depo}}</td>
+                  <td class="font-semibold">{{emp.station}}</td>
+                  <td class="bold-mono">{{emp.unit}}</td>
+                  <td>
+                    <button type="button" class="btn-table-inline-icon edit" (click)="initiateEmployeeEdit(emp)" title="Edit Record"><i class="fa-solid fa-pencil"></i></button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="activeTab === 'rent-roll'" class="tab-panel-fade">
+        <div class="content-panel-wrapper" *ngIf="rentRollViewMode === 'list'">
+          <div class="panel-header-inline">
+            <h3>Feed Rent Roll Statement</h3>
+            <span class="highlight-attention-sentence">Feed Rent Roll only if Employee occupied Railway Quarters</span>
+          </div>
+          
+          <div class="glass-table-container">
+            <table class="modern-grid-table table-compact green-table-header">
+              <thead>
+                <tr><th>S.No</th><th>PF Number</th><th>Employee Name</th><th>Designation</th><th>Depo</th><th>Action</th></tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let emp of getFilteredData(masterEmployees)">
+                  <td>{{emp.sNo}}</td>
+                  <td class="bold-mono">{{emp.pf}}</td>
+                  <td><strong>{{emp.name}}</strong></td>
+                  <td>{{emp.desig}}</td>
+                  <td class="muted-text-sm">{{emp.depo}}</td>
+                  <td>
+                    <div class="flex-actions-clean-row-icons">
+                      <span *ngIf="emp.rentRollStatus === 'AVBL'" class="badge-tag status-avbl-pill">AVBL</span>
+                      <button *ngIf="emp.rentRollStatus === '+'" type="button" class="btn-table-inline-icon add font-bold-text" (click)="routeRentRollAdd(emp)">+</button>
+                      
+                      <button type="button" class="btn-table-inline-icon edit" (click)="routeRentRollEdit(emp)" title="Edit Parameters"><i class="fa-solid fa-pencil"></i></button>
+                      <button type="button" class="btn-table-inline-icon view" (click)="routeRentRollView(emp)" title="View Summary"><i class="fa-solid fa-eye"></i></button>
+                      <button type="button" class="btn-table-inline-icon delete" (click)="triggerDeleteVerificationPrompt(emp.sNo)" title="Delete Entry"><i class="fa-solid fa-trash-can"></i></button>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div *ngIf="rentRollViewMode === 'add'" class="form-panel-card card-narrow animate-in">
+          <div class="form-card-header"><h3>REGISTER QUARTERS OCCUPANCY STATEMENT</h3></div>
+          <form (ngSubmit)="commitRentRollFormAction(rentRollForm.sNo)" class="corporate-form-body">
+            <div class="form-group"><label>Employee No / PF Context</label><input type="text" [(ngModel)]="rentRollForm.pf" name="pf" class="form-control" readonly></div>
+            <div class="form-group"><label>Railway Quarter No</label><input type="text" [(ngModel)]="rentRollForm.qNo" name="qNo" class="form-control"></div>
+            <div class="form-group"><label>Type of Quarters</label><input type="text" [(ngModel)]="rentRollForm.qType" name="qType" class="form-control"></div>
+            <div class="form-group"><label>Location</label><input type="text" class="form-control" [(ngModel)]="rentRollForm.area" name="area"></div>
+            <div class="form-group"><label>In Occupation From</label><input type="date" [(ngModel)]="rentRollForm.occupiedFrom" name="occupiedFrom" class="form-control"></div>
+            <div class="form-group"><label>Remarks</label><input type="text" [(ngModel)]="rentRollForm.remarks" name="remarks" class="form-control"></div>
+            <div class="editor-actions-strip">
+              <button type="submit" class="form-submit-btn-magenta">Save</button>
+              <button type="button" class="btn-action-cancel" (click)="rentRollViewMode = 'list'">Back</button>
+            </div>
+          </form>
+        </div>
+
+        <div *ngIf="rentRollViewMode === 'edit'" class="form-panel-card card-narrow animate-in">
+          <div class="form-card-header"><h3>MODIFY REGISTERED QUARTERS OCCUPANCY RECORD</h3></div>
+          <form (ngSubmit)="commitRentRollFormAction(rentRollForm.sNo)" class="corporate-form-body">
+            <div class="form-group"><label>Employee No</label><input type="text" [(ngModel)]="rentRollForm.pf" name="pf" class="form-control" readonly></div>
+            <div class="form-group"><label>Employee Name</label><input type="text" [(ngModel)]="rentRollForm.name" name="name" class="form-control" readonly></div>
+            <div class="form-group"><label>Railway Quarter No</label><input type="text" [(ngModel)]="rentRollForm.qNo" name="qNo" class="form-control"></div>
+            <div class="form-group"><label>Type of Quarters</label><input type="text" [(ngModel)]="rentRollForm.qType" name="qType" class="form-control"></div>
+            <div class="form-group"><label>Area Location</label><input type="text" [(ngModel)]="rentRollForm.area" name="area" class="form-control"></div>
+            <div class="form-group"><label>In Occupation From</label><input type="date" [(ngModel)]="rentRollForm.occupiedFrom" name="occupiedFrom" class="form-control"></div>
+            <div class="form-group"><label>Remarks</label><input type="text" [(ngModel)]="rentRollForm.remarks" name="remarks" class="form-control"></div>
+            <div class="editor-actions-strip">
+              <button type="submit" class="form-submit-btn-magenta">Update</button>
+              <button type="button" class="btn-action-cancel" (click)="rentRollViewMode = 'list'">Cancel</button>
+            </div>
+          </form>
+        </div>
+
+        <div *ngIf="rentRollViewMode === 'view'" class="content-panel-wrapper animate-in">
+          <h4 class="text-center-text border-bottom-thick font-semibold text-muted padding-bottom-sm">Rent Roll Summary Report</h4>
+          <div class="glass-table-container margin-top-md">
+            <table class="modern-grid-table table-compact text-center-cells bg-header-green">
+              <thead>
+                <tr><th>PF Number</th><th>Name of the Employee</th><th>Desig.</th><th>Railway Quarter No.</th><th>Type of Quarters</th><th>Area</th><th>In Occupation from</th><th>Remarks</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="bold-mono">{{rentRollForm.pf}}</td>
+                  <td><strong>{{rentRollForm.name}}</strong></td>
+                  <td>{{rentRollForm.desig}}</td>
+                  <td class="bold-mono">{{rentRollForm.qNo}}</td>
+                  <td>{{rentRollForm.qType}}</td>
+                  <td>{{rentRollForm.area}}</td>
+                  <td>{{rentRollForm.occupiedFrom}}</td>
+                  <td class="muted-text-sm">{{rentRollForm.remarks}}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <button type="button" class="btn-action-cancel margin-top-md" (click)="rentRollViewMode = 'list'">Back</button>
+        </div>
+      </div>
+
+      <div *ngIf="activeTab === 'nda-hours'" class="tab-panel-fade">
+        <div *ngIf="ndaViewMode === 'list'" class="content-panel-wrapper animate-in">
+          <div class="panel-header-inline">
+            <h3>ADD NDA FOR EMPLOYEES</h3>
+            <button type="button" class="btn-tab-inline-submit-magenta" (click)="executeFormSubmission('NDA Complete Tab Workflow Frame')">NDA FINAL SUBMIT</button>
+          </div>
+          <table class="modern-grid-table table-compact structural-cells-vertical-stack">
+            <thead>
+              <tr><th>Sno</th><th>EMPLOYEE PF</th><th>EMPLOYEE NAME</th><th>EMPLOYEE DESIGNATION</th><th>EMPLOYEE DEPO</th><th>ACTION PIPELINE</th></tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let emp of getFilteredData(masterEmployees)">
+                <td>{{emp.sNo}}</td>
+                <td class="bold-mono">{{emp.pf}}</td>
+                <td><strong>{{emp.name}}</strong></td>
+                <td>{{emp.desig}}</td>
+                <td class="muted-text-sm">{{emp.depo}}</td>
+                <td>
+                  <div class="action-pipeline-aligned-cell">
+                    <span class="text-status-marker-pill" [ngClass]="emp.status === 'AVBL' ? 'text-green' : 'text-orange'">{{emp.status}}</span>
+                    <button type="button" class="action-icon-cell-btn view" (click)="initiateNdaHoursView(emp)" title="View Logs"><i class="fa-solid fa-eye"></i></button>
+                    <button type="button" class="action-icon-cell-btn add" (click)="initiateNdaHoursAdd(emp)" title="Add Entry"><i class="fa-solid fa-plus"></i></button>
+                    <button type="button" class="action-icon-cell-btn delete" (click)="triggerDeleteVerificationPrompt(emp.sNo)" title="Delete"><i class="fa-solid fa-trash-can"></i></button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div *ngIf="ndaViewMode === 'add-hours'" class="content-panel-wrapper animate-in">
+          <div class="nested-panel-header-inline"><h3>Add Night Duty Hours Log</h3></div>
+          <div class="form-horizontal-row-split-inputs bg-light-card margin-top-md">
+            <div class="form-group"><label>From Date</label><input type="date" [(ngModel)]="newNdaEntry.fromDate" class="form-control"></div>
+            <div class="form-group"><label>To Date</label><input type="date" [(ngModel)]="newNdaEntry.toDate" class="form-control"></div>
+            <div class="form-group"><label>NDA Hours</label><input type="number" [(ngModel)]="newNdaEntry.hours" class="form-control"></div>
+            <div class="form-group"><label>Remarks</label><input type="text" [(ngModel)]="newNdaEntry.remarks" class="form-control"></div>
+          </div>
+          <div class="editor-actions-strip margin-top-md">
+            <button type="button" class="btn-action-save" (click)="saveNewNdaHoursLog()">Commit Log</button>
+            <button type="button" class="btn-action-cancel" (click)="ndaViewMode = 'list'">Back</button>
+          </div>
+        </div>
+
+        <div *ngIf="ndaViewMode === 'view-hours'" class="content-panel-wrapper animate-in">
+          <h3>EMPLOYEE NIGHT DUTY WORKING HOURS</h3>
+          <table class="modern-grid-table table-compact bg-white-override margin-top-md">
+            <thead><tr><th>PF Number</th><th>Employee Name</th><th>Designation</th><th>From Date</th><th>To Date</th><th>Working Hours</th><th>Remarks</th></tr></thead>
+            <tbody>
+              <tr *ngFor="let row of ndaHistoricalHours">
+                <td class="bold-mono">{{selectedNdaPf}}</td><td><strong>{{selectedNdaName}}</strong></td><td>ASST/CNW</td><td>{{row.fromDate}}</td><td>{{row.toDate}}</td><td class="count-bold text-magenta-color">{{row.hours}}</td><td>{{row.remarks}}</td>
+              </tr>
+            </tbody>
+          </table>
+          <button type="button" class="btn-action-cancel margin-top-md" (click)="ndaViewMode = 'list'">Back</button>
+        </div>
+      </div>
+
+      <div *ngIf="activeTab === 'scale-check'" class="tab-panel-fade">
+        <div class="content-panel-wrapper" *ngIf="scaleCheckViewMode === 'list'">
+          <div class="panel-header-inline">
+            <h3>SCALE CHECK DETAILS INDEX</h3>
+            <button type="button" class="btn-tab-inline-submit-magenta" (click)="executeFormSubmission('Scale Check Matrix Document Signoff Frame')">SCALE CHECK FINAL SUBMIT</button>
+          </div>
+          <table class="modern-grid-table table-compact">
+            <thead>
+              <tr><th>S.No</th><th>Stn</th><th>Depart</th><th>BillUnit</th><th>Desig</th><th>Sanctions</th><th>Actuals</th><th>Vacancy</th><th>Excess</th><th>Remarks</th><th>Action</th></tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let s of getFilteredData(scaleCheckData)">
+                <td>{{s.sNo}}</td><td><strong>{{s.stn}}</strong></td><td class="muted-text-sm">{{s.dept}}</td><td class="bold-mono">{{s.unit}}</td><td><strong>{{s.desig}}</strong></td><td>{{s.sanc}}</td><td>{{s.act}}</td><td class="text-danger font-semibold">{{s.vac}}</td><td class="text-success font-semibold">{{s.exc}}</td><td>{{s.remarks}}</td>
+                <td>
+                  <button type="button" class="btn-table-inline-icon edit" (click)="initScaleCheckEdit(s)" title="Modify Matrix Row"><i class="fa-solid fa-pencil"></i></button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div *ngIf="scaleCheckViewMode === 'edit'" class="form-panel-card card-narrow animate-in">
+          <div class="form-card-header"><h3>SCALE CHECK CONFIGURATION MATRIX</h3></div>
+          <form (ngSubmit)="saveScaleCheckForm()" class="corporate-form-body">
+            <div class="form-group"><label>Station</label><input type="text" class="form-control" [(ngModel)]="scaleForm.stn" name="station"></div>
+            <div class="form-group"><label>Department</label><input type="text" class="form-control" [(ngModel)]="scaleForm.dept" name="department"></div>
+            <div class="form-group"><label>Bill Unit</label><input type="text" class="form-control" [(ngModel)]="scaleForm.unit" name="billUnit"></div>
+            <div class="form-group"><label>Designation</label><input type="text" class="form-control" [(ngModel)]="scaleForm.desig" name="designation"></div>
+            <div class="form-group"><label>Sanctions</label><input type="number" class="form-control" [(ngModel)]="scaleForm.sanc" name="sanctions"></div>
+            <div class="form-group"><label>Actuals</label><input type="number" class="form-control" [(ngModel)]="scaleForm.act" name="actuals"></div>
+            <div class="form-group"><label>Vacancy</label><input type="number" class="form-control" [(ngModel)]="scaleForm.vac" name="vacancy"></div>
+            <div class="form-group"><label>Excess</label><input type="number" class="form-control" [(ngModel)]="scaleForm.exc" name="excess"></div>
+            <div class="form-group"><label>Remarks</label><input type="text" class="form-control" [(ngModel)]="scaleForm.remarks" name="remarks"></div>
+            <div class="editor-actions-strip">
+              <button type="submit" class="form-submit-btn-magenta">Save Matrix Parameters</button>
+              <button type="button" class="btn-action-cancel" (click)="scaleCheckViewMode = 'list'">Cancel</button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <div class="tab-panel-fade" *ngIf="activeTab === 'muster-kit'">
+        <div class="content-panel-wrapper animate-in" *ngIf="musterKitViewMode === 'list'">
+          <div class="panel-header-inline">
+            <h3>MUSTER KIT</h3>
+            <button type="button" class="btn-tab-inline-submit-magenta" (click)="executeFormSubmission('Muster Kit Document Roster Verification Frame')">MUSTER FINAL SUBMIT</button>
+          </div>
+          <table class="modern-grid-table table-compact">
+            <thead>
+              <tr><th>Sno</th><th>Employee PF</th><th>Employee Name</th><th>Employee Designation</th><th>Employee Depo</th><th>Action Pipeline Options</th></tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let row of getFilteredData(masterEmployees)">
+                <td>{{row.sNo}}</td>
+                <td class="bold-mono">{{row.pf}}</td>
+                <td><strong>{{row.name}}</strong></td>
+                <td>{{row.desig}}</td>
+                <td class="muted-text-sm">{{row.depo}}</td>
+                <td>
+                  <div class="action-pipeline-aligned-cell">
+                    <span class="text-status-marker-pill" [ngClass]="row.status === 'AVBL' ? 'text-green' : 'text-orange'">{{row.status}}</span>
+                    <button type="button" class="action-icon-cell-btn view" (click)="activeKitRow = row; musterKitViewMode = 'available-musters'" title="View Available Musters"><i class="fa-solid fa-eye"></i></button>
+                    <button type="button" class="action-icon-cell-btn add" (click)="activeKitRow = row; musterKitViewMode = 'upload'" title="Upload Attachment Packet"><i class="fa-solid fa-plus"></i></button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="form-panel-card card-narrow animate-in" *ngIf="musterKitViewMode === 'upload'">
+          <div class="form-card-header"><h3>SIGNED MUSTER WITH ATTACHMENT FORM</h3></div>
+          <form (ngSubmit)="executeFormSubmission('Muster Kit File')" class="corporate-form-body">
+            <div class="form-group-spaced">
+              <label>Select File Upload Asset</label>
+              <input type="file" class="form-control-file">
+            </div>
+            <div class="form-group-line-break-divider"></div>
+            <div class="form-group-spaced">
+              <label>Month/Year String</label>
+              <input type="text" [(ngModel)]="uploadKitForm.monthYear" name="monthYear" class="form-control">
+            </div>
+            <div class="editor-actions-strip margin-top-md">
+              <button type="submit" class="form-submit-btn-magenta">Upload Document Packet</button>
+              <button type="button" class="btn-action-cancel" (click)="musterKitViewMode = 'list'">Back</button>
+            </div>
+          </form>
+        </div>
+
+        <div class="content-panel-wrapper animate-in" *ngIf="musterKitViewMode === 'available-musters'">
+          <div class="sub-table-header-context border-bottom-none">
+            <table class="modern-grid-table table-dense bg-header-green">
+              <thead><tr><th>PF Number</th><th>Emp Name</th><th>Designation</th><th>Department Name</th><th>Depo</th><th>Station</th></tr></thead>
+              <tbody><tr><td class="bold-mono">{{activeKitRow?.pf || '24409692289'}}</td><td><strong>{{activeKitRow?.name || 'G KRANTHIKUMAR'}}</strong></td><td>{{activeKitRow?.desig || 'SR TECH/CNW'}}</td><td>MECHANICAL</td><td>SSE/MECH/CHG/CNW/BZA</td><td>BZA</td></tr></tbody>
+            </table>
+          </div>
+          <h5 class="text-center-text margin-top-md font-semibold text-muted">AVAILABLE MUSTERS</h5>
+          <div class="glass-table-container">
+            <table class="modern-grid-table table-compact text-center-cells">
+              <thead><tr><th>SNo</th><th>Period Start From</th><th>Period End To</th><th>View Action</th></tr></thead>
+              <tbody>
+                <tr *ngFor="let kit of availableMustersList">
+                  <td>{{kit.sNo}}</td><td>{{kit.from}}</td><td>{{kit.to}}</td>
+                  <td><button type="button" class="btn-table-inline-icon view" (click)="musterKitViewMode = 'detailed-musters'"><i class="fa-solid fa-eye"></i></button></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <button type="button" class="btn-action-cancel margin-top-sm" (click)="musterKitViewMode = 'list'">Back</button>
+        </div>
+
+        <div class="content-panel-wrapper animate-in" *ngIf="musterKitViewMode === 'detailed-musters'">
+          <div class="sub-table-header-context border-bottom-none">
+            <table class="modern-grid-table table-dense bg-header-green">
+              <thead><tr><th>PF Number</th><th>Emp Name</th><th>Designation</th><th>Department Name</th><th>Depo</th><th>Station</th></tr></thead>
+              <tbody><tr><td class="bold-mono">{{activeKitRow?.pf || '24409692289'}}</td><td><strong>{{activeKitRow?.name || 'G KRANTHIKUMAR'}}</strong></td><td>{{activeKitRow?.desig || 'SR TECH/CNW'}}</td><td>MECHANICAL</td><td>SSE/MECH/CHG/CNW/BZA</td><td>BZA</td></tr></tbody>
+            </table>
+          </div>
+          <h5 class="text-center-text margin-top-md font-semibold text-muted">DETAILED MUSTER ATTENDANCE BREAKDOWN REPORT</h5>
+          <div class="glass-table-container">
+            <table class="modern-grid-table table-compact text-center-cells text-padded-lg">
+              <thead><tr><th>SNo</th><th>Muster Reporting Date</th><th>Attendance Value State</th></tr></thead>
+              <tbody>
+                <tr *ngFor="let day of detailedMusterDays">
+                  <td>{{day.day}}</td><td>{{day.date}}</td><td><strong class="text-magenta-color">{{day.status}}</strong></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <button type="button" class="btn-action-cancel margin-top-md" (click)="musterKitViewMode = 'available-musters'">Back</button>
+        </div>
+      </div>
+
+      <div *ngIf="activeTab === 'help-desk'" class="tab-panel-fade">
+        <div class="sub-navigation-toggle-strip">
+          <button type="button" [class.sub-active]="helpDeskSubTab === 'submit'" (click)="helpDeskSubTab = 'submit'"><i class="fa-solid fa-square-plus"></i> Submit Ticket</button>
+          <button type="button" [class.sub-active]="helpDeskSubTab === 'view'" (click)="helpDeskSubTab = 'view'"><i class="fa-solid fa-clipboard-list"></i> View Tickets</button>
+        </div>
+
+        <div *ngIf="helpDeskSubTab === 'submit'" class="form-panel-card card-narrow animate-in">
+          <form (ngSubmit)="executeFormSubmission('Help Desk Ticket')" class="corporate-form-body">
+            <div class="form-group"><label>Employee PF Number</label><input type="text" [(ngModel)]="helpDeskForm.pfNumber" name="pfNumber" class="form-control" placeholder="Your PF Number.."></div>
+            <div class="form-group"><label>Problem Explanation Summary</label><textarea [(ngModel)]="helpDeskForm.description" name="description" class="form-control text-area-sizing" placeholder="Describe the discrepancy details here..."></textarea></div>
+            
+            <div class="form-group">
+              <label>Attach Supporting Memo Document (Optional)</label>
+              <input type="file" class="form-control-file">
+            </div>
+            
+            <button type="submit" class="form-submit-btn-magenta">Submit Ticket Logs</button>
+          </form>
+        </div>
+
+        <div *ngIf="helpDeskSubTab === 'view'" class="content-panel-wrapper animate-in">
+          <table class="modern-grid-table">
+            <thead>
+              <tr><th>Ticket ID</th><th>Date</th><th>Category</th><th>Notes Summary</th><th>Status</th></tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let t of registeredTickets">
+                <td class="bold-mono text-magenta-icon">{{t.id}}</td><td>{{t.date}}</td><td>{{t.cat}}</td><td class="muted-text-sm">{{t.desc}}</td><td><span class="badge-tag status-avbl-pill">{{t.status}}</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div *ngIf="activeTab === 'password-submit'" class="tab-panel-fade">
+        <div class="form-panel-card card-narrow">
+          <div class="form-card-header"><h3>Update Security Password</h3></div>
+          <form (ngSubmit)="executeFormSubmission('Password Overwrite Sequence')" class="corporate-form-body">
+            <div class="form-group"><label>Current Password</label><input type="password" [(ngModel)]="securityForm.oldPassword" name="oldPassword" class="form-control" placeholder="••••••••"></div>
+            <div class="form-group"><label>New Password</label><input type="password" [(ngModel)]="securityForm.newPassword" name="newPassword" class="form-control" placeholder="••••••••"></div>
+            <div class="form-group"><label>Confirm New Password</label><input type="password" [(ngModel)]="securityForm.confirmPassword" name="confirmPassword" class="form-control" placeholder="••••••••"></div>
+            <button type="submit" class="form-submit-btn-magenta">Commit Password Overwrite</button>
+          </form>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div *ngIf="showDeleteConfirmationModal" class="modal-backdrop-blur prompt-overlay-veil">
+    <div class="modal-box dialogue-box-compact border-radius-sm">
+      <h3 class="confirmation-prose-text text-center-text font-bold">Are you sure you want to delete?</h3>
+      <div class="modal-actions centered-buttons gap-md margin-top-sm">
+        <button type="button" class="modal-btn-confirm alert-bg text-uppercase text-padded-wide" (click)="confirmDeleteRecordAction()">Yes</button>
+        <button type="button" class="modal-btn-cancel text-uppercase text-padded-wide text-dark-slate" (click)="closeDeleteModal()">No</button>
+      </div>
+    </div>
+  </div>
+
+</div>

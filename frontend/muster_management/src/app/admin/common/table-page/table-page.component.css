@@ -1,0 +1,304 @@
+/* ==========================================================================
+   ADMIN WORKSPACE COMPONENT DESIGN SYSTEM
+   ========================================================================== */
+
+.page {
+  padding: 10px 0;
+  box-sizing: border-box;
+  background: transparent;
+  height: 100%;
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+  width: 100%;
+}
+
+.page-header h2 {
+  font-size: 26px;
+  color: #0f172a;
+  font-weight: 700;
+  margin: 0;
+}
+
+.add-btn {
+  background: #e31dab;
+  color: white;
+  border: none;
+  padding: 11px 24px;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(227, 29, 171, 0.2);
+  transition: all 0.2s;
+}
+
+.add-btn:hover {
+  background: #be185d;
+}
+
+.search-bar {
+  margin-bottom: 30px;
+}
+
+.search-bar input {
+  width: 280px;
+  padding: 11px 14px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  background: #ffffff;
+  font-weight: 500;
+}
+
+/* ================= DYNAMIC DATA MATRIX TABLE ================= */
+
+.table-container {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 16px;
+  overflow-x: auto;
+  overflow-y: auto;
+  max-height: calc(100vh - 290px);
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+}
+
+table {
+  width: max-content;
+  min-width: 100%;
+  border-collapse: collapse;
+}
+
+th,
+td {
+  padding: 14px;
+  border: 1px solid #e5e7eb;
+  white-space: nowrap;
+  font-size: 0.88rem;
+  text-align: center;
+  color: #1e293b;
+}
+
+th {
+  background: #4caf50 !important;
+  color: #ffffff !important;
+  font-weight: 700;
+}
+
+tbody tr:hover {
+  background: #f8fafc;
+}
+
+th:last-child,
+td:last-child {
+  min-width: 120px;
+}
+
+/* ================= VECTOR ICON ACTION CONTROL ROW PIPELINES ================= */
+
+.admin-actions-cell-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.icon-btn {
+  border: 1px solid #cbd5e1;
+  background: transparent;
+  cursor: pointer;
+  padding: 0;
+  font-size: 0.85rem;
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.edit-btn { color: #0369a1; background: #eff6ff; border-color: #bfdbfe; }
+.delete-btn { color: #b91c1c; background: #fff5f5; border-color: #fecaca; }
+.icon-btn:hover { transform: scale(1.05); box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05); }
+
+/* ================= FULL PAGE FORM CARD DESIGNS ================= */
+
+.form-panel-card {
+  background: #ffffff;
+  border-radius: 14px;
+  border: 1px solid #e2e8f0;
+  overflow: hidden;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+}
+
+.form-panel-card.card-narrow {
+  max-width: 540px;
+  margin: 0 auto;
+}
+
+.form-card-header {
+  background: #1e293b;
+  color: white;
+  padding: 18px 24px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  border-bottom: 2px solid #e31dab;
+}
+
+.form-card-header h3 { margin: 0; font-size: 1rem; }
+.corporate-form-body { padding: 24px; display: flex; flex-direction: column; gap: 16px; background: #ffffff; }
+.form-group { display: flex; flex-direction: column; gap: 6px; }
+.form-group label { font-size: 0.8rem; font-weight: 700; color: #334155; text-transform: uppercase; text-align: left; }
+
+.form-control {
+  border: 1px solid #cbd5e1;
+  padding: 10px 14px;
+  border-radius: 7px;
+  font-size: 0.9rem;
+  color: #0f172a;
+  background: #ffffff;
+  box-sizing: border-box;
+  width: 100%;
+}
+.form-control:focus { outline: none; border-color: #e31dab; }
+
+.form-submit-btn-magenta {
+  background: #e31dab; color: white; border: none; padding: 11px 22px; border-radius: 7px; font-size: 0.9rem; font-weight: 600; cursor: pointer;
+}
+.form-submit-btn-magenta:hover { background: #be185d; }
+
+.editor-actions-strip { display: flex; gap: 10px; justify-content: flex-end; margin-top: 10px; }
+.btn-action-cancel { background: #475569; color: white; border: none; padding: 11px 22px; border-radius: 7px; font-weight: 600; cursor: pointer; }
+
+/* ================= NEW BEAUTIFIED OVERLAY MODAL FOR DELETIONS ================= */
+
+.modal-backdrop-blur {
+  z-index: 99999 !important;
+  background: rgba(15, 23, 42, 0.6) !important;
+  backdrop-filter: blur(4px) !important;
+  position: fixed !important;
+  top: 0; left: 0; width: 100vw; height: 100vh;
+  display: flex; align-items: center; justify-content: center;
+}
+
+.premium-delete-card {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 32px 24px;
+  width: 100%;
+  max-width: 400px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  box-sizing: border-box;
+  border: 1px solid #f1f5f9;
+}
+
+.warning-icon-badge {
+  background: #fef2f2;
+  color: #dc2626;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.6rem;
+  margin-bottom: 20px;
+  border: 1px solid #fee2e2;
+}
+
+.delete-modal-title {
+  margin: 0 0 10px 0;
+  font-size: 1.3rem;
+  color: #0f172a;
+  font-weight: 700;
+}
+
+.delete-modal-message {
+  margin: 0 0 24px 0;
+  font-size: 0.9rem;
+  color: #64748b;
+  line-height: 1.5;
+  font-weight: 500;
+}
+
+.delete-modal-actions-layout {
+  display: flex;
+  width: 100%;
+  gap: 12px;
+}
+
+.action-btn-confirm-delete {
+  flex: 1;
+  background: #dc2626;
+  color: #ffffff;
+  border: none;
+  padding: 12px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.92rem;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s ease;
+}
+.action-btn-confirm-delete:hover {
+  background: #b91c1c;
+}
+
+.action-btn-cancel-delete {
+  flex: 1;
+  background: #f1f5f9;
+  color: #475569;
+  border: 1px solid #e2e8f0;
+  padding: 12px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.92rem;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.action-btn-cancel-delete:hover {
+  background: #e2e8f0;
+  color: #1e293b;
+}
+
+.button-icon-gap {
+  margin-right: 8px;
+}
+
+/* ================= MARQUEE EDITORS & ANIMATIONS ================= */
+
+.scrolling-text-editor-card {
+  background: #ffffff;
+  padding: 16px;
+  border-radius: 10px;
+  border: 1px solid #e2e8f0;
+  margin-bottom: 20px;
+}
+.inline-form-row { display: flex; gap: 10px; margin-top: 10px; }
+
+.animate-in {
+  animation: fadeInFrame 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.animate-scale-up {
+  animation: modalScaleUp 0.22s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes fadeInFrame {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes modalScaleUp {
+  from { transform: scale(0.95); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}

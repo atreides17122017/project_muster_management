@@ -1,0 +1,88 @@
+<div *ngIf="router.url === '/login'">
+  <router-outlet></router-outlet>
+</div>
+
+<div *ngIf="router.url !== '/login'" class="dashboard-container" [class.collapsed]="isCollapsed">
+  <aside>
+    <div class="sidebar-brand">
+      <img src="/Railway image.png" class="sidebar-logo" alt="IR Logo" />
+      <span>Admin</span>
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="menu-wrapper" *ngFor="let menu of menus">
+        <div
+          *ngIf="!menu.items || menu.items.length === 0"
+          class="menu-title single"
+          [class.active-accent]="currentActiveItemName === menu.name"
+          (click)="navigate(menu)"
+        >
+          <span>{{ menu.title }}</span>
+        </div>
+
+        <div *ngIf="menu.items && menu.items.length">
+          <div class="menu-title" (click)="toggleMenu(menu)">
+            <span>{{ menu.title }}</span>
+            <span class="arrow" [class.open]="menu.open">▼</span>
+          </div>
+
+          <div class="submenu" *ngIf="menu.open">
+            <div
+              *ngFor="let item of menu.items"
+              class="submenu-item"
+              [class.active-accent]="currentActiveItemName === item.name"
+              (click)="navigate(item, $event)"
+            >
+              {{ item.name }}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="logout-container">
+        <hr class="nav-divider" />
+        <div class="menu-title single logout-box" (click)="router.navigate(['/login'])">
+          <span>Logout</span>
+        </div>
+      </div>
+    </nav>
+  </aside>
+
+  <main>
+    <header class="top-navbar">
+      <button type="button" class="toggle-btn" (click)="toggleSidebar()">☰</button>
+      <div class="header-titles">
+        <h1>MUSTER MANAGEMENT SYSTEM</h1>
+        <h2>VIJAYAWADA DIVISION • SOUTH CENTRAL RAILWAY</h2>
+      </div>
+    </header>
+
+    <div class="ticker-container">
+      <div class="ticker-track">
+        {{ getScrollingText() }}
+      </div>
+    </div>
+
+    <div class="workspace-padding">
+      <router-outlet></router-outlet>
+    </div>
+  </main>
+
+  <div *ngIf="showNoticeModal" class="notice-modal-backdrop">
+    <div class="admin-instructions-modal-card animate-modal-in">
+      <div class="admin-instructions-header">
+        <h3>SYSTEM INSTRUCTIONS & SUBMISSION GUIDELINES</h3>
+        <button type="button" class="admin-instructions-close-btn" (click)="closeNoticeModal()">×</button>
+      </div>
+      <div class="admin-instructions-body">
+        <ol class="admin-instructions-list">
+          <li>Muster should be submitted before <strong class="highlight-text">12th of every month</strong>.</li>
+          <li>Joining date / Relieving date in <strong class="highlight-text">MUSTER</strong> will appear in MOD statements must be compulsory Updated.</li>
+          <li>Relieving/Joining/transfer/Sick Memos should be uploaded and entries must be done in MMS without these documents should not be drawn it is the role responsibilities of the supervisors to ensure this.</li>
+          <li>For NDA and Musters related Grievances please use the helpdesk option only this is to be used before <strong class="highlight-text">10th of every month</strong>.</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+
+</div>

@@ -1,0 +1,91 @@
+<div class="dashboard-container">
+  
+  <aside class="sidebar" [ngClass]="{ 'sidebar-closed': !isSidebarOpen }">
+    <div class="sidebar-brand">
+      <img src="Railway image.png" alt="IR Logo" class="sidebar-logo">
+      <span *ngIf="isSidebarOpen">MMS Portal</span>
+    </div>
+    
+    <nav class="sidebar-nav">
+      <button type="button" class="nav-item active" (click)="navigateTo('dashboard')">
+        <i class="fa-solid fa-gauge"></i> 
+        <span *ngIf="isSidebarOpen">Dashboard</span>
+      </button>
+      
+      <button type="button" class="nav-item" (click)="navigateTo('new-bill')">
+        <i class="fa-solid fa-file-invoice"></i> 
+        <span *ngIf="isSidebarOpen">New Invoice</span>
+      </button>
+      
+      <button type="button" class="nav-item" (click)="navigateTo('history')">
+        <i class="fa-solid fa-clock"></i> 
+        <span *ngIf="isSidebarOpen">History</span>
+      </button>
+      
+      <button type="button" class="nav-item" (click)="navigateTo('settings')">
+        <i class="fa-solid fa-gear"></i> 
+        <span *ngIf="isSidebarOpen">Settings</span>
+      </button>
+      
+      <hr class="nav-divider">
+      
+      <button type="button" class="nav-item logout" (click)="logout()">
+        <i class="fa-solid fa-right-from-bracket"></i> 
+        <span *ngIf="isSidebarOpen">Logout</span>
+      </button>
+    </nav>
+  </aside>
+
+  <div class="main-content">
+    
+    <header class="top-navbar">
+      <button type="button" class="toggle-btn" (click)="toggleSidebar()">
+        <i class="fa-solid" [ngClass]="isSidebarOpen ? 'fa-bars-staggered' : 'fa-bars'"></i>
+      </button>
+      <div class="header-titles">
+        <h1>MUSTER MANAGEMENT SYSTEM</h1>
+        </div>
+    </header>
+
+    <div class="workspace-padding">
+      
+      <div class="stats-grid">
+        <div class="stat-card pending">
+          <h3>Pending Invoices</h3>
+          <p class="stat-number">12</p>
+        </div>
+        <div class="stat-card processed">
+          <h3>Processed Today</h3>
+          <p class="stat-number">45</p>
+        </div>
+      </div>
+
+      <main class="actions-grid">
+        <div class="action-card" (click)="navigateTo('new-bill')">
+          <i class="fa-solid fa-file-invoice-dollar card-icon"></i>
+          <h3>Generate New Bill</h3>
+          <p>Create and upload a new system invoice</p>
+        </div>
+
+        <div class="action-card" (click)="navigateTo('view-bills')">
+          <i class="fa-solid fa-list-check card-icon"></i>
+          <h3>View Pending Bills</h3>
+          <p>Review or update submitted invoices</p>
+        </div>
+
+        <div class="action-card" (click)="navigateTo('history')">
+          <i class="fa-solid fa-clock-rotate-left card-icon"></i>
+          <h3>Billing History</h3>
+          <p>Access complete past transaction records</p>
+        </div>
+
+        <div class="action-card" (click)="navigateTo('reports')">
+          <i class="fa-solid fa-chart-line card-icon"></i>
+          <h3>Download Reports</h3>
+          <p>Export financial and muster spreadsheets</p>
+        </div>
+      </main>
+
+    </div>
+  </div>
+</div>

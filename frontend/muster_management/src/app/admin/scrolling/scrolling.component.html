@@ -1,0 +1,42 @@
+<div class="scrolling-container">
+
+  <h1 class="title">SCROLLING TEXT DETAILS</h1>
+
+  <table class="scrolling-table">
+
+    <tr>
+      <td class="label-cell">TEXT</td>
+
+      <td>
+        <textarea
+          rows="3"
+          [(ngModel)]="text">
+        </textarea>
+      </td>
+    </tr>
+
+    <tr>
+      <td class="label-cell">NOTICEBOARD</td>
+
+      <td>
+        <textarea
+          rows="8"
+          [(ngModel)]="noticeboard">
+        </textarea>
+      </td>
+    </tr>
+
+    <tr>
+      <td colspan="2" class="submit-row">
+
+        <button class="submit-btn"
+                (click)="saveScrolling()">
+          Submit
+        </button>
+
+      </td>
+    </tr>
+
+  </table>
+
+</div>
