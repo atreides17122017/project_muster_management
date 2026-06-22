@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-
+import { HttpClient } from '@angular/common/http';
 @Component({
   selector: 'app-table-page',
   standalone: true,
@@ -25,7 +25,10 @@ export class TablePageComponent implements OnInit {
   newItem: any = {};
   itemPendingDeletion: any = null;
 
-  constructor(private route: ActivatedRoute) {}
+  constructor(
+  private route: ActivatedRoute,
+  private http: HttpClient
+) {}
 
   ngOnInit() {
     this.route.params.subscribe((params) => {
@@ -42,91 +45,174 @@ export class TablePageComponent implements OnInit {
 
       const config: any = {
         Employee: {
-          columns: [
-            { key: 'id', label: 'ID' },
-            { key: 'pf_number', label: 'PF Number' },
-            { key: 'employee_name', label: 'Name' },
-            { key: 'mobile_number', label: 'Mobile' },
-            { key: 'employee_station', label: 'Station' },
-            { key: 'employee_department', label: 'Department' },
-            { key: 'employee_designation', label: 'Designation' },
-            { key: 'employee_bill_unit', label: 'Bill Unit' },
-            { key: 'employee_manual_serial_number', label: 'Manual Serial No' }
-          ],
-          data: [
-            { id: 1, pf_number: '24409692289', employee_name: 'G KRANTHIKUMAR', mobile_number: '9603494214', employee_station: 'BZA', employee_department: 'MECHANICAL', employee_designation: 'SR TECH/CNW', employee_bill_unit: '3703449', employee_manual_serial_number: '101' },
-            { id: 2, pf_number: '24408656204', employee_name: 'B.SUBBARAO', mobile_number: '7075085018', employee_station: 'BZA', employee_department: 'MECHANICAL', employee_designation: 'SR TECH/CNW', employee_bill_unit: '3703415', employee_manual_serial_number: '102' }
-          ]
-        },
+  columns: [
+    { key: 'id', label: 'ID' },
+    { key: 'pf_number', label: 'PF Number' },
+    { key: 'employee_name', label: 'Name' },
+    { key: 'mobile_number', label: 'Mobile' },
+    { key: 'employee_station', label: 'Station' },
+    { key: 'employee_department', label: 'Department' },
+
+    // ADD THIS
+    { key: 'depo', label: 'Depo' },
+
+    { key: 'employee_designation', label: 'Designation' },
+    { key: 'employee_bill_unit', label: 'Bill Unit' },
+    { key: 'employee_manual_serial_number', label: 'Manual Serial No' }
+  ],
+  data: []
+},
         'Bill Unit': {
-          columns: [
-            { key: 'id', label: 'ID' },
-            { key: 'bill_unit_code', label: 'Code' },
-            { key: 'department', label: 'Department' },
-            { key: 'station', label: 'Station' },
-          ],
-          data: [
-            { id: 1, bill_unit_code: 'BU-01', department: 'MECHANICAL', station: 'BZA' },
-            { id: 2, bill_unit_code: 'BU-02', department: 'OPERATIONS', station: 'MAS' }
-          ]
-        },
+  columns: [
+    { key: 'id', label: 'ID' },
+    { key: 'bill_unit_code', label: 'Code' },
+    { key: 'department', label: 'Department' },
+    { key: 'station', label: 'Station' }
+  ],
+  data: []
+},
         Stations: {
-          columns: [
-            { key: 'id', label: 'ID' },
-            { key: 'station_code', label: 'Code' },
-            { key: 'station_name', label: 'Name' },
-            { key: 'station_category', label: 'Category' }
-          ],
-          data: [
-            { id: 1, station_code: 'BZA', station_name: 'VIJAYAWADA', station_category: 'NSG-1' },
-            { id: 2, station_code: 'MAS', station_name: 'CHENNAI CENTRAL', station_category: 'NSG-1' }
-          ]
-        },
+  columns: [
+    { key: 'id', label: 'ID' },
+    { key: 'station_code', label: 'Code' },
+    { key: 'station_name', label: 'Name' },
+    { key: 'station_category', label: 'Category' }
+  ],
+  data: []
+},
         Department: {
-          columns: [
-            { key: 'id', label: 'ID' },
-            { key: 'department_name', label: 'Department Name' }
-          ],
-          data: [
-            { id: 1, department_name: 'MECHANICAL' },
-            { id: 2, department_name: 'OPERATIONS' },
-            { id: 3, department_name: 'PERSONNEL' }
-          ]
-        },
-        'Input Options': {
-          columns: [
-            { key: 'id', label: 'ID' },
-            { key: 'option_code', label: 'Code' },
-            { key: 'option_name', label: 'Name' }
-          ],
-          data: [
-            { id: 1, option_code: 'OPT-A', option_name: 'Muster Supervisor' },
-            { id: 2, option_code: 'OPT-B', option_name: 'Bill Dealer' }
-          ]
-        },
+  columns: [
+    { key: 'id', label: 'ID' },
+    { key: 'department_name', label: 'Department Name' }
+  ],
+  data: []
+},      'Input Options': {
+  columns: [
+    { key: 'id', label: 'ID' },
+    { key: 'option_code', label: 'Code' },
+    { key: 'option_name', label: 'Name' }
+  ],
+  data: []
+},    Supervisor: {
+
+  columns: [
+
+    { key: 'id', label: 'Admin ID' },
+
+    { key: 'username', label: 'User Name' },
+
+    {
+      key: 'password',
+      label: 'Password'
+    },
+
+    { key: 'department', label: 'Department' },
+
+    { key: 'depot', label: 'Depo' },
+
+    { key: 'mobile_number', label: 'Mobile' },
+
+    { key: 'station', label: 'Station' },
+
+    { key: 'bill_unit_code', label: 'Bill Unit Code' },
+
+    {
+      key: 'role',
+      label: 'Role',
+      type: 'dropdown',
+      options: [
+        'Supervisor',
+        'Bill Dealer'
+      ]
+    },
+
+    { key: 'secret_count', label: 'Secret Count' }
+
+  ],
+
+  data: []
+
+},
         // FIXED: Re-mapped the fields to fully match your blueprint layout from image_a1f0a7.png
-        Supervisor: {
-          columns: [
-            { key: 'admin_id', label: 'Admin ID' },
-            { key: 'username', label: 'UserName' },
-            { key: 'password_mask', label: 'Password' },
-            { key: 'department', label: 'Department' },
-            { key: 'depo', label: 'Depo' },
-            { key: 'mobile', label: 'Mobile' },
-            { key: 'station', label: 'Station' },
-            { key: 'secret_count', label: 'Secret Count' }
-          ],
-          data: [
-            { id: 1, admin_id: '856', username: 'adfm/bza', password_mask: 'bzamms@123', department: 'ACCOUNTS', depo: 'GAZ/BZA', mobile: '0', station: 'BZA', secret_count: '4' },
-            { id: 2, admin_id: '1009', username: 'Sr.DFM/O/BZA', password_mask: '123456', department: 'ACCOUNTS', depo: 'Sr.DFM/O/BZA', mobile: '9701373101', station: 'BZA', secret_count: '0' },
-            { id: 3, admin_id: '799', username: 'CBI/O/BZA', password_mask: 'bzamms@123', department: 'CBI', depo: 'CBI/O/BZA', mobile: '6303066021', station: 'BZA', secret_count: '1' }
-          ]
-        },
+        
       };
 
       this.columns = config[name]?.columns || [];
       this.data = config[name]?.data || [];
+      if (name === 'Employee') {
+
+  this.http.get<any[]>(
+    'http://127.0.0.1:8000/api/employees'
+  )
+  .subscribe(res => {
+
+    this.data = res;
+
+  });
+
+}
+if (name === 'Bill Unit') {
+
+  this.http.get<any[]>(
+    'http://127.0.0.1:8000/api/bill-units'
+  )
+  .subscribe(res => {
+
+    this.data = res;
+
+  });
+
+}
+if (name === 'Stations') {
+
+  this.http.get<any[]>(
+    'http://127.0.0.1:8000/api/stations'
+  )
+  .subscribe(res => {
+
+    this.data = res;
+
+  });
+
+}
+if (name === 'Department') {
+
+  this.http.get<any[]>(
+    'http://127.0.0.1:8000/api/departments'
+  )
+  .subscribe(res => {
+
+    this.data = res;
+
+  });
+
+}
+if (name === 'Input Options') {
+
+  this.http.get<any[]>(
+    'http://127.0.0.1:8000/api/input-options'
+  )
+  .subscribe(res => {
+
+    this.data = res;
+
+  });
+
+}
+if (name === 'Supervisor') {
+
+  this.http.get<any[]>(
+    'http://127.0.0.1:8000/api/supervisors'
+  )
+  .subscribe(res => {
+
+    this.data = res;
+
+  });
+
+}
     });
+    
   }
 
   switchToAddMode() {
@@ -145,20 +231,290 @@ export class TablePageComponent implements OnInit {
   }
 
   commitSaveNewItemAction() {
-    this.newItem['id'] = this.data.length + 1;
-    this.data.push({ ...this.newItem });
-    alert('Entry record added successfully.');
+
+  if (this.title === 'Employee') {
+
+    this.http.post<any>(
+      'http://127.0.0.1:8000/api/employees',
+      this.newItem
+    )
+    .subscribe({
+
+  next: (res) => {
+
+    this.data.push(res.employee);
+
+    alert('Employee Added Successfully');
+
     this.currentViewMode = 'list';
+
+  },
+
+  error: (err) => {
+
+    console.log(err);
+
+    alert('Failed to add employee');
+
   }
 
-  commitUpdateItemAction() {
-    const idx = this.data.findIndex(d => d.id === this.selectedItem.id);
-    if (idx !== -1) {
-      this.data[idx] = { ...this.selectedItem };
-      alert('Changes successfully saved.');
-    }
-    this.currentViewMode = 'list';
+});
+
   }
+  if (this.title === 'Bill Unit') {
+
+  this.http.post<any>(
+    'http://127.0.0.1:8000/api/bill-units',
+    this.newItem
+  )
+  .subscribe(res => {
+
+    this.data.push(res.bill_unit);
+
+    alert('Bill Unit Added Successfully');
+
+    this.currentViewMode = 'list';
+
+  });
+
+}
+if (this.title === 'Stations') {
+
+  this.http.post<any>(
+    'http://127.0.0.1:8000/api/stations',
+    this.newItem
+  )
+  .subscribe(res => {
+
+    this.data.push(res.station);
+
+    alert('Station Added Successfully');
+
+    this.currentViewMode = 'list';
+
+  });
+
+}
+if (this.title === 'Department') {
+
+  this.http.post<any>(
+    'http://127.0.0.1:8000/api/departments',
+    this.newItem
+  )
+  .subscribe(res => {
+
+    this.data.push(res.department);
+
+    alert('Department Added Successfully');
+
+    this.currentViewMode = 'list';
+
+  });
+
+}
+
+if (this.title === 'Input Options') {
+
+  this.http.post<any>(
+    'http://127.0.0.1:8000/api/input-options',
+    this.newItem
+  )
+  .subscribe(res => {
+
+    this.data.push(res.input_option);
+
+    alert('Input Option Added Successfully');
+
+    this.currentViewMode = 'list';
+
+  });
+
+}
+if (this.title === 'Supervisor') {
+
+  this.http.post<any>(
+    'http://127.0.0.1:8000/api/supervisors',
+    this.newItem
+  )
+  .subscribe(res => {
+
+    this.data.push(res.supervisor);
+
+    alert('Supervisor Added Successfully');
+
+    this.currentViewMode = 'list';
+
+  });
+
+}
+}
+
+  commitUpdateItemAction() {
+
+  if (this.title === 'Employee') {
+
+    this.http.put<any>(
+      `http://127.0.0.1:8000/api/employees/${this.selectedItem.id}`,
+      this.selectedItem
+    )
+    .subscribe({
+
+  next: (res) => {
+
+    const idx = this.data.findIndex(
+      d => d.id === this.selectedItem.id
+    );
+
+    if (idx !== -1) {
+
+      this.data[idx] = res.employee;
+
+    }
+
+    alert('Employee Updated Successfully');
+
+    this.currentViewMode = 'list';
+
+  },
+
+  error: (err) => {
+
+    console.log(err);
+
+    alert('Failed to update employee');
+
+  }
+
+});
+  }
+  if (this.title === 'Bill Unit') {
+
+  this.http.put<any>(
+    `http://127.0.0.1:8000/api/bill-units/${this.selectedItem.id}`,
+    this.selectedItem
+  )
+  .subscribe(res => {
+
+    const idx = this.data.findIndex(
+      d => d.id === this.selectedItem.id
+    );
+
+    if (idx !== -1) {
+
+      this.data[idx] = res.bill_unit;
+
+    }
+
+    alert('Bill Unit Updated Successfully');
+
+    this.currentViewMode = 'list';
+
+  });
+
+}
+if (this.title === 'Stations') {
+
+  this.http.put<any>(
+    `http://127.0.0.1:8000/api/stations/${this.selectedItem.id}`,
+    this.selectedItem
+  )
+  .subscribe(res => {
+
+    const idx = this.data.findIndex(
+      d => d.id === this.selectedItem.id
+    );
+
+    if (idx !== -1) {
+
+      this.data[idx] = res.station;
+
+    }
+
+    alert('Station Updated Successfully');
+
+    this.currentViewMode = 'list';
+
+  });
+
+}
+if (this.title === 'Department') {
+
+  this.http.put<any>(
+    `http://127.0.0.1:8000/api/departments/${this.selectedItem.id}`,
+    this.selectedItem
+  )
+  .subscribe(res => {
+
+    const idx = this.data.findIndex(
+      d => d.id === this.selectedItem.id
+    );
+
+    if (idx !== -1) {
+
+      this.data[idx] = res.department;
+
+    }
+
+    alert('Department Updated Successfully');
+
+    this.currentViewMode = 'list';
+
+  });
+
+}
+if (this.title === 'Input Options') {
+
+  this.http.put<any>(
+    `http://127.0.0.1:8000/api/input-options/${this.selectedItem.id}`,
+    this.selectedItem
+  )
+  .subscribe(res => {
+
+    const idx = this.data.findIndex(
+      d => d.id === this.selectedItem.id
+    );
+
+    if (idx !== -1) {
+
+      this.data[idx] = res.input_option;
+
+    }
+
+    alert('Input Option Updated Successfully');
+
+    this.currentViewMode = 'list';
+
+  });
+
+}
+if (this.title === 'Supervisor') {
+
+  this.http.put<any>(
+    `http://127.0.0.1:8000/api/supervisors/${this.selectedItem.id}`,
+    this.selectedItem
+  )
+  .subscribe(res => {
+
+    const idx =
+      this.data.findIndex(
+        d => d.id === this.selectedItem.id
+      );
+
+    if (idx !== -1) {
+
+      this.data[idx] = res.supervisor;
+
+    }
+
+    alert('Supervisor Updated Successfully');
+
+    this.currentViewMode = 'list';
+
+  });
+
+}
+
+}
 
   triggerDeleteVerification(item: any) {
     this.itemPendingDeletion = item;
@@ -166,12 +522,148 @@ export class TablePageComponent implements OnInit {
   }
 
   confirmDeleteAction() {
-    if (this.itemPendingDeletion) {
-      this.data = this.data.filter(d => d.id !== this.itemPendingDeletion.id);
-    }
-    this.showDeletePromptModal = false;
-    this.itemPendingDeletion = null;
+
+  if (
+    this.title === 'Employee' &&
+    this.itemPendingDeletion
+  ) {
+
+    this.http.delete(
+      `http://127.0.0.1:8000/api/employees/${this.itemPendingDeletion.id}`
+    )
+    .subscribe(() => {
+
+      this.data = this.data.filter(
+        d => d.id !== this.itemPendingDeletion.id
+      );
+
+      alert('Employee Deleted Successfully');
+
+      this.showDeletePromptModal = false;
+
+      this.itemPendingDeletion = null;
+
+    });
+
   }
+  if (
+  this.title === 'Bill Unit' &&
+  this.itemPendingDeletion
+) {
+
+  this.http.delete(
+    `http://127.0.0.1:8000/api/bill-units/${this.itemPendingDeletion.id}`
+  )
+  .subscribe(() => {
+
+    this.data = this.data.filter(
+      d => d.id !== this.itemPendingDeletion.id
+    );
+
+    alert('Bill Unit Deleted Successfully');
+
+    this.showDeletePromptModal = false;
+
+    this.itemPendingDeletion = null;
+
+  });
+
+}
+
+if (
+  this.title === 'Stations' &&
+  this.itemPendingDeletion
+) {
+
+  this.http.delete(
+    `http://127.0.0.1:8000/api/stations/${this.itemPendingDeletion.id}`
+  )
+  .subscribe(() => {
+
+    this.data = this.data.filter(
+      d => d.id !== this.itemPendingDeletion.id
+    );
+
+    alert('Station Deleted Successfully');
+
+    this.showDeletePromptModal = false;
+
+    this.itemPendingDeletion = null;
+
+  });
+
+}
+if (
+  this.title === 'Department' &&
+  this.itemPendingDeletion
+) {
+
+  this.http.delete(
+    `http://127.0.0.1:8000/api/departments/${this.itemPendingDeletion.id}`
+  )
+  .subscribe(() => {
+
+    this.data = this.data.filter(
+      d => d.id !== this.itemPendingDeletion.id
+    );
+
+    alert('Department Deleted Successfully');
+
+    this.showDeletePromptModal = false;
+
+    this.itemPendingDeletion = null;
+
+  });
+
+}
+if (
+  this.title === 'Input Options' &&
+  this.itemPendingDeletion
+) {
+
+  this.http.delete(
+    `http://127.0.0.1:8000/api/input-options/${this.itemPendingDeletion.id}`
+  )
+  .subscribe(() => {
+
+    this.data = this.data.filter(
+      d => d.id !== this.itemPendingDeletion.id
+    );
+
+    alert('Input Option Deleted Successfully');
+
+    this.showDeletePromptModal = false;
+
+    this.itemPendingDeletion = null;
+
+  });
+
+}
+if (
+  this.title === 'Supervisor' &&
+  this.itemPendingDeletion
+) {
+
+  this.http.delete(
+    `http://127.0.0.1:8000/api/supervisors/${this.itemPendingDeletion.id}`
+  )
+  .subscribe(() => {
+
+    this.data =
+      this.data.filter(
+        d => d.id !== this.itemPendingDeletion.id
+      );
+
+    alert('Supervisor Deleted Successfully');
+
+    this.showDeletePromptModal = false;
+
+    this.itemPendingDeletion = null;
+
+  });
+
+}
+}
 
   saveScrolling() {
     localStorage.setItem('scrollingText', this.scrollingText);

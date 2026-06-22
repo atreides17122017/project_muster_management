@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { HttpClient } from '@angular/common/http';
+
 
 @Component({
   selector: 'app-supervisor',
@@ -12,8 +14,11 @@ import { FormsModule } from '@angular/forms';
 export class SupervisorComponent implements OnInit {
   // Global Workspace Configuration Properties
   isSidebarOpen: boolean = true;
-  activeTab: string = 'employee-list'; 
+  activeTab: string = 'employee-list';
   searchText: string = '';
+  supervisorName = '';
+supervisorId = '';
+loggedSupervisorRole = '';
   showInstructionsModal: boolean = false;
   showDeleteConfirmationModal: boolean = false; // Inline delete prompt state tracking
 
@@ -25,11 +30,17 @@ export class SupervisorComponent implements OnInit {
   helpDeskSubTab: 'submit' | 'view' = 'submit';
 
   // Selected Row Memory Mappings
-  editingEmployeeId: number | null = null;
-  selectedNdaPf: string | null = null;
-  selectedNdaName: string = '';
-  activeKitRow: any = null;
-  rowPendingDeletionId: number | null = null;
+editingEmployeeId: number | null = null;
+selectedNdaPf: string | null = null;
+selectedNdaName: string = '';
+activeKitRow: any = null;
+rowPendingDeletionId: number | null = null;
+
+viewNdaRecords: any[] = [];
+masterEmployees: any[] = [];
+  constructor(
+  private http: HttpClient
+) {}
 
   // Operational Form Datasets
   rentRollForm = { sNo: 0, pf: '', name: '', desig: '', qNo: '', qType: '', area: '', occupiedFrom: '', occupiedTo: '', remarks: '' };
@@ -41,12 +52,6 @@ export class SupervisorComponent implements OnInit {
   newNdaEntry = { fromDate: '11-05-2026', toDate: '10-06-2026', hours: '', remarks: '' };
 
   // --- COMPREHENSIVE LOCAL RECORD MATRIX MASTER DATASETS ---
-  masterEmployees = [
-    { sNo: 1, pf: '24409692289', name: 'G KRANTHIKUMAR', desig: 'SR TECH/CNW', mobile: '9603494214', dept: 'MECHANICAL', station: 'BZA', unit: '3703449', depo: 'SSE/MECH/CHG/CNW/BZA', status: 'AVBL', manualSerial: '101', rentRollStatus: '+' },
-    { sNo: 2, pf: '24408656204', name: 'B.SUBBARAO', desig: 'SR TECH/CNW', mobile: '7075085018', dept: 'MECHANICAL', station: 'BZA', unit: '3703415', depo: 'SSE/MECH/CHG/CNW/BZA', status: 'AVBL', manualSerial: '102', rentRollStatus: 'AVBL' },
-    { sNo: 3, pf: '24409690797', name: 'P RAJESWARA RAO', desig: 'SR TECH/CNW', mobile: '9701373496', dept: 'MECHANICAL', station: 'BZA', unit: '3703415', depo: 'SSE/MECH/CHG/CNW/BZA', status: 'AVBL', manualSerial: '103', rentRollStatus: '+' },
-    { sNo: 4, pf: '244IE070224', name: 'K.RAMESH', desig: 'TECH-I/CNW', mobile: '9701373452', dept: 'MECHANICAL', station: 'BZA', unit: '3703415', depo: 'SSE/MECH/CHG/CNW/BZA', status: 'DRAFT', manualSerial: '104', rentRollStatus: '+' }
-  ];
 
   ndaHistoricalHours = [
     { fromDate: '01-12-2025', toDate: '31-12-2025', hours: 80, remarks: '*' },
@@ -74,12 +79,95 @@ export class SupervisorComponent implements OnInit {
   ];
 
   ngOnInit(): void {
-    const modalSessionToken = sessionStorage.getItem('mms_supervisor_session_active');
+
+    // Get logged supervisor from localStorage
+    const supervisor = JSON.parse(
+      localStorage.getItem('loggedSupervisor')!
+    );
+    this.supervisorName =
+supervisor.username.toUpperCase();
+
+this.supervisorId =
+supervisor.id;
+
+this.loggedSupervisorRole =
+supervisor.role;
+
+    console.log(supervisor);
+
+    // Fetch employees having same bill unit
+    this.http.get<any[]>(
+      'http://127.0.0.1:8000/api/employees/bill-unit/' +
+      supervisor.bill_unit_code
+    )
+      .subscribe({
+
+
+        next: (response) => {
+
+          console.log(response);
+
+          this.masterEmployees = response.map(
+            (employee, index) => ({
+
+              sNo: index + 1,
+
+              pf: employee.pf_number,
+
+              name: employee.employee_name,
+
+              mobile: employee.mobile_number,
+
+              station: employee.employee_station,
+
+              dept: employee.employee_department,
+
+              depo: employee.depo,
+
+              desig: employee.employee_designation,
+
+              unit: employee.employee_bill_unit,
+
+              manualSerial:
+                employee.employee_manual_serial_number,
+
+              status: employee.status,
+
+              rentRollStatus: '+'
+            })
+          );
+
+        },
+
+        error: (err) => {
+
+          console.log(err);
+
+        }
+
+
+      });
+
+    const modalSessionToken =
+      sessionStorage.getItem(
+        'mms_supervisor_session_active'
+      );
+
     if (!modalSessionToken) {
+
       this.showInstructionsModal = true;
-      sessionStorage.setItem('mms_supervisor_session_active', 'true');
+
+      sessionStorage.setItem(
+        'mms_supervisor_session_active',
+        'true'
+      );
+
+
     }
+
   }
+
+
 
   dismissInstructionsModal(): void {
     this.showInstructionsModal = false;
@@ -108,7 +196,7 @@ export class SupervisorComponent implements OnInit {
   getFilteredData(dataset: any[]): any[] {
     if (!this.searchText.trim()) return dataset;
     const term = this.searchText.toLowerCase();
-    return dataset.filter(item => 
+    return dataset.filter(item =>
       (item.name && item.name.toLowerCase().includes(term)) ||
       (item.pf && item.pf.includes(term)) ||
       (item.desig && item.desig.toLowerCase().includes(term)) ||
@@ -202,26 +290,101 @@ export class SupervisorComponent implements OnInit {
   }
 
   initiateNdaHoursAdd(row: any): void {
-    this.selectedNdaPf = row.pf;
-    this.selectedNdaName = row.name;
-    this.ndaViewMode = 'add-hours';
-  }
 
+  this.selectedNdaPf = row.pf;
+
+  this.selectedNdaName = row.name;
+
+  this.activeKitRow = row;
+
+  this.ndaViewMode = 'add-hours';
+
+}
+
+  
   initiateNdaHoursView(row: any): void {
-    this.selectedNdaPf = row.pf;
-    this.selectedNdaName = row.name;
-    this.ndaViewMode = 'view-hours';
-  }
+
+  this.selectedNdaPf = row.pf;
+  this.selectedNdaName = row.name;
+
+  this.http.get<any[]>(
+    'http://127.0.0.1:8000/api/employee-nda-details/employee/' +
+    row.pf
+  )
+  .subscribe({
+
+    next: (response) => {
+
+      console.log(response);
+
+      this.viewNdaRecords = response;
+
+      this.ndaViewMode = 'view-hours';
+
+    },
+
+    error: (err) => {
+
+      console.log(err);
+
+    }
+
+  });
+
+}
 
   saveNewNdaHoursLog(): void {
-    this.ndaHistoricalHours.unshift({
-      fromDate: this.newNdaEntry.fromDate,
-      toDate: this.newNdaEntry.toDate,
-      hours: Number(this.newNdaEntry.hours || 0),
-      remarks: this.newNdaEntry.remarks || '*'
-    });
-    this.ndaViewMode = 'list';
-  }
+
+  const body = {
+
+    pf_number: this.activeKitRow.pf,
+
+    employee_name: this.activeKitRow.name,
+
+    designation: this.activeKitRow.desig,
+
+    depot: this.activeKitRow.depo,
+
+    from_date: this.newNdaEntry.fromDate,
+
+    to_date: this.newNdaEntry.toDate,
+
+    working_hours: this.newNdaEntry.hours,
+
+    remarks: this.newNdaEntry.remarks
+
+  };
+
+  this.http.post<any>(
+
+    'http://127.0.0.1:8000/api/employee-nda-details',
+
+    body
+
+  )
+  .subscribe({
+
+    next: (response) => {
+
+      console.log(response);
+
+      alert('NDA Hours Added Successfully');
+
+      this.ndaViewMode = 'list';
+
+    },
+
+    error: (err) => {
+
+      console.log(err);
+
+      alert('Failed to Add NDA Hours');
+
+    }
+
+  });
+
+}
 
   deleteNdaRowRecord(pf: string): void {
     if (confirm(`Drop NDA log row parameters for entry [PF: ${pf}]?`)) {
@@ -232,9 +395,67 @@ export class SupervisorComponent implements OnInit {
   executeFormSubmission(ctx: string): void {
     alert(`${ctx} has been successfully validated.`);
   }
+  deleteNdaRecord(id: number) {
 
+  if (!confirm('Delete this NDA record?')) {
+    return;
+  }
+
+  this.http.delete(
+    'http://127.0.0.1:8000/api/employee-nda-details/' + id
+  )
+  .subscribe({
+
+    next: () => {
+
+      alert('NDA Record Deleted Successfully');
+
+      // refresh eye list
+      this.viewNdaRecords =
+      this.viewNdaRecords.filter(
+        record => record.id !== id
+      );
+
+    },
+
+    error: (err) => {
+
+      console.log(err);
+
+      alert('Failed to Delete NDA Record');
+
+    }
+
+  });
+
+}
   logout(): void {
     sessionStorage.removeItem('mms_supervisor_session_active');
     alert('Session invalidated.');
   }
+  finalSubmitNda()
+{
+  this.http.put<any>(
+    'http://127.0.0.1:8000/api/employee-nda-final-submit',
+    {}
+  )
+  .subscribe({
+
+    next: (response) => {
+
+      alert(response.message);
+
+    },
+
+    error: (err) => {
+
+      console.log(err);
+
+      alert('Final Submission Failed');
+
+    }
+
+  });
 }
+}
+

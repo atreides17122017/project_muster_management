@@ -69,10 +69,26 @@
     <div class="workspace-padding">
       <div class="stats-grid">
         <div class="stat-card profile-card">
-          <h3>Active Supervisor Profile</h3>
-          <p class="stat-number user-title">N. SATISH KUMAR</p>
-          <span class="meta-label">ID Badge: <strong>719</strong></span>
-        </div>
+
+  <h3>Active Supervisor Profile</h3>
+
+  <p class="stat-number user-title">
+    {{ supervisorName }}
+  </p>
+
+  <span class="meta-label">
+    ID Badge:
+    <strong>{{ supervisorId }}</strong>
+  </span>
+
+  <br>
+
+  <span class="meta-label">
+    Role:
+    <strong>{{ loggedSupervisorRole }}</strong>
+  </span>
+
+</div>
         <div class="stat-card active-period-card">
           <h3>Current Active Muster Period</h3>
           <p class="stat-number period-range">11-05-2026 to 10-06-2026</p>
@@ -232,7 +248,12 @@
         <div *ngIf="ndaViewMode === 'list'" class="content-panel-wrapper animate-in">
           <div class="panel-header-inline">
             <h3>ADD NDA FOR EMPLOYEES</h3>
-            <button type="button" class="btn-tab-inline-submit-magenta" (click)="executeFormSubmission('NDA Complete Tab Workflow Frame')">NDA FINAL SUBMIT</button>
+            <button
+type="button"
+class="btn-tab-inline-submit-magenta"
+(click)="finalSubmitNda()">
+NDA FINAL SUBMIT
+</button>
           </div>
           <table class="modern-grid-table table-compact structural-cells-vertical-stack">
             <thead>
@@ -275,11 +296,33 @@
         <div *ngIf="ndaViewMode === 'view-hours'" class="content-panel-wrapper animate-in">
           <h3>EMPLOYEE NIGHT DUTY WORKING HOURS</h3>
           <table class="modern-grid-table table-compact bg-white-override margin-top-md">
-            <thead><tr><th>PF Number</th><th>Employee Name</th><th>Designation</th><th>From Date</th><th>To Date</th><th>Working Hours</th><th>Remarks</th></tr></thead>
+            <thead><tr><th>PF Number</th><th>Employee Name</th><th>Designation</th><th>From Date</th><th>To Date</th><th>Working Hours</th><th>Remarks</th>
+            <th>Status</th><th>Delete</th></tr></thead>
             <tbody>
-              <tr *ngFor="let row of ndaHistoricalHours">
-                <td class="bold-mono">{{selectedNdaPf}}</td><td><strong>{{selectedNdaName}}</strong></td><td>ASST/CNW</td><td>{{row.fromDate}}</td><td>{{row.toDate}}</td><td class="count-bold text-magenta-color">{{row.hours}}</td><td>{{row.remarks}}</td>
-              </tr>
+              <tr *ngFor="let row of viewNdaRecords">
+  <td class="bold-mono">{{selectedNdaPf}}</td>
+  <td><strong>{{selectedNdaName}}</strong></td>
+  <td>{{row.designation}}</td>
+  <td>{{row.from_date}}</td>
+  <td>{{row.to_date}}</td>
+  <td class="count-bold text-magenta-color">
+    {{row.working_hours}}
+  </td>
+  <td>{{row.remarks}}</td>
+  <td>{{row.status}}</td>
+  <td>
+
+<button
+type="button"
+class="action-icon-cell-btn delete"
+(click)="deleteNdaRecord(row.id)">
+
+<i class="fa-solid fa-trash-can"></i>
+
+</button>
+
+</td>
+</tr>
             </tbody>
           </table>
           <button type="button" class="btn-action-cancel margin-top-md" (click)="ndaViewMode = 'list'">Back</button>
