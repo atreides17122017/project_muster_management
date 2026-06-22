@@ -8,18 +8,23 @@ class EmployeeNdaDetail extends Model
 {
     protected $fillable = [
 
-        'pf_number',
+'pf_number',
 
-        'employee_name',
+'employee_name',
 
-        'designation',
+'designation',
 
-        'from_date',
+'depot',
 
-        'to_date',
+'from_date',
 
-        'working_hours',
+'to_date',
 
-        'remarks'
-    ];
+'working_hours',
+
+'remarks',
+
+'status'
+
+];
 }

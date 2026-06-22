@@ -10,7 +10,9 @@ class SupervisorController extends Controller
     // GET ALL SUPERVISORS
     public function index()
     {
-        return response()->json(Supervisor::all());
+        return response()->json(
+            Supervisor::all()
+        );
     }
 
     // ADD SUPERVISOR
@@ -18,11 +20,9 @@ class SupervisorController extends Controller
     {
         $supervisor = Supervisor::create([
 
-            'supervisor_name' => $request->supervisor_name,
-
             'username' => $request->username,
 
-            'password' => bcrypt($request->password),
+            'password' =>($request->password),
 
             'mobile_number' => $request->mobile_number,
 
@@ -32,9 +32,12 @@ class SupervisorController extends Controller
 
             'station' => $request->station,
 
-            'bill_unit' => $request->bill_unit,
+            'bill_unit_code' => $request->bill_unit_code,
 
             'role' => $request->role,
+
+            'secret_count' => $request->secret_count
+
         ]);
 
         return response()->json([
@@ -56,18 +59,22 @@ class SupervisorController extends Controller
     {
         $supervisor = Supervisor::findOrFail($id);
 
-        $supervisor->supervisor_name = $request->supervisor_name;
         $supervisor->username = $request->username;
+
         $supervisor->mobile_number = $request->mobile_number;
+
         $supervisor->department = $request->department;
+
         $supervisor->depot = $request->depot;
+
         $supervisor->station = $request->station;
-        $supervisor->bill_unit = $request->bill_unit;
+
+        $supervisor->bill_unit_code = $request->bill_unit_code;
+
         $supervisor->role = $request->role;
 
-        if ($request->password) {
-            $supervisor->password = bcrypt($request->password);
-        }
+        $supervisor->secret_count = $request->secret_count;
+        $supervisor->password = $request->password;
 
         $supervisor->save();
 
@@ -86,4 +93,27 @@ class SupervisorController extends Controller
             'message' => 'Supervisor Deleted Successfully'
         ]);
     }
+    public function login(Request $request)
+{
+    $supervisor = Supervisor::where(
+        'username',
+        $request->username
+    )->where(
+        'password',
+        $request->password
+    )->first();
+
+    if (!$supervisor) {
+
+        return response()->json([
+            'message' => 'Invalid Username or Password'
+        ], 401);
+
+    }
+
+    return response()->json([
+        'message' => 'Login Successful',
+        'user' => $supervisor
+    ]);
+}
 }

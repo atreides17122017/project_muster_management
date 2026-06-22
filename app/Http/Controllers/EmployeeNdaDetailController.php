@@ -20,20 +20,25 @@ class EmployeeNdaDetailController extends Controller
     {
         $nda = EmployeeNdaDetail::create([
 
-            'pf_number' => $request->pf_number,
+'pf_number' => $request->pf_number,
 
-            'employee_name' => $request->employee_name,
+'employee_name' => $request->employee_name,
 
-            'designation' => $request->designation,
+'designation' => $request->designation,
 
-            'from_date' => $request->from_date,
+'depot' => $request->depot,
 
-            'to_date' => $request->to_date,
+'from_date' => $request->from_date,
 
-            'working_hours' => $request->working_hours,
+'to_date' => $request->to_date,
 
-            'remarks' => $request->remarks
-        ]);
+'working_hours' => $request->working_hours,
+
+'remarks' => $request->remarks,
+
+'status' => 'Draft'
+
+]);
 
         return response()->json([
             'message' => 'NDA Detail Added Successfully',
@@ -56,7 +61,19 @@ class EmployeeNdaDetailController extends Controller
             EmployeeNdaDetail::where('pf_number', $pf_number)->get()
         );
     }
+    public function finalSubmit()
+{
+    EmployeeNdaDetail::where(
+        'status',
+        'Draft'
+    )->update([
+        'status' => 'Submitted'
+    ]);
 
+    return response()->json([
+        'message' => 'NDA Final Submitted Successfully'
+    ]);
+}
     // UPDATE
     public function update(Request $request, $id)
     {

@@ -12,6 +12,16 @@ class EmployeeController extends Controller
     {
         return response()->json(Employee::all());
     }
+    public function getByBillUnit($billUnit)
+{
+$employees = Employee::where(
+'employee_bill_unit',
+$billUnit
+)->get();
+
+return response()->json($employees);
+
+}
 
     // Add Employee
     public function store(Request $request)

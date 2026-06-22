@@ -53,6 +53,10 @@ Route::get('/input-options/{id}', [InputOptionController::class, 'show']);
 Route::put('/input-options/{id}', [InputOptionController::class, 'update']);
 Route::delete('/input-options/{id}', [InputOptionController::class, 'destroy']);
 //supervisor
+Route::post(
+    '/supervisor-login',
+    [SupervisorController::class, 'login']
+);
 // supervisors
 Route::get('/supervisors', [SupervisorController::class, 'index']);
 Route::post('/supervisors', [SupervisorController::class, 'store']);
@@ -60,6 +64,22 @@ Route::get('/supervisors/{id}', [SupervisorController::class, 'show']);
 Route::put('/supervisors/{id}', [SupervisorController::class, 'update']);
 Route::delete('/supervisors/{id}', [SupervisorController::class, 'destroy']);
 //employee nda details
+Route::get(
+'/employees/bill-unit/{billUnit}',
+[EmployeeController::class, 'getByBillUnit']
+);
+Route::get(
+'/employee-nda-details/{pf_number}',
+[EmployeeNdaDetailController::class,'getByPfNumber']
+);
+Route::put(
+'/employee-nda-final-submit',
+[EmployeeNdaDetailController::class,'finalSubmit']
+);
+Route::delete(
+    '/employee-nda-details/{id}',
+    [EmployeeNdaDetailController::class, 'destroy']
+);
 Route::get('/employee-nda-details', [EmployeeNdaDetailController::class, 'index']);
 Route::post('/employee-nda-details', [EmployeeNdaDetailController::class, 'store']);
 Route::get('/employee-nda-details/{id}', [EmployeeNdaDetailController::class, 'show']);

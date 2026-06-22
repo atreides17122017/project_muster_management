@@ -8,7 +8,6 @@ class BillUnit extends Model
 {
     protected $fillable = [
     'bill_unit_code',
-    'bill_unit',
     'department',
     'station'
 ];

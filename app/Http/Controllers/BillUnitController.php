@@ -17,11 +17,10 @@ class BillUnitController extends Controller
     public function store(Request $request)
     {
         $billUnit = BillUnit::create([
-            'bill_unit_code' => $request->bill_unit_code,
-            'bill_unit'      => $request->bill_unit,
-            'department'     => $request->department,
-            'station'        => $request->station
-        ]);
+    'bill_unit_code' => $request->bill_unit_code,
+    'department' => $request->department,
+    'station' => $request->station
+]);
 
         return response()->json([
             'message' => 'Bill Unit Added Successfully',
@@ -43,11 +42,10 @@ class BillUnitController extends Controller
         $billUnit = BillUnit::findOrFail($id);
 
         $billUnit->update([
-            'bill_unit_code' => $request->bill_unit_code,
-            'bill_unit'      => $request->bill_unit,
-            'department'     => $request->department,
-            'station'        => $request->station
-        ]);
+    'bill_unit_code' => $request->bill_unit_code,
+    'department' => $request->department,
+    'station' => $request->station
+]);
 
         return response()->json([
             'message' => 'Bill Unit Updated Successfully',
